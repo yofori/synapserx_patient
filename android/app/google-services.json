@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "465308159478",
+    "project_id": "synapsepx",
+    "storage_bucket": "synapsepx.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465308159478:android:d822313c0d744bbbe54bd7",
+        "android_client_info": {
+          "package_name": "com.example.synapserx_patient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465308159478-c78me2ip5g4gq49eg4jv9vrt3tr0jqt7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChRmOcOKxWP_Nw-0D4UAI4aunJU5sZspI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465308159478-c78me2ip5g4gq49eg4jv9vrt3tr0jqt7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "465308159478-ahi88qp9iqb28enbdqf2ukuis9fm0ltj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.synapserxPatient"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
