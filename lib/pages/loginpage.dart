@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
+import 'package:synapserx_patient/widgets/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
+  static String get routeName => 'login';
+  static String get routeLocation => '/$routeName';
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -12,6 +15,16 @@ class LoginPage extends StatefulWidget {
 bool passwordVisible = false;
 
 class _LoginPageState extends State<LoginPage> {
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+
+  void showAlert(String alert, bool isError) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(alert),
+      backgroundColor: isError ? Colors.red : Colors.green,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle defaultStyle =
@@ -126,6 +139,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 20,
             ),
             TextFormField(
+                controller: _emailTextController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   filled: true,
@@ -152,6 +166,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 20,
             ),
             TextFormField(
+                controller: _passwordTextController,
                 obscureText: !passwordVisible,
                 decoration: InputDecoration(
                   suffixIcon: IconButton(
@@ -189,7 +204,9 @@ class _LoginPageState extends State<LoginPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.go('/login/forgotpassword');
+                  },
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(fontSize: 16, color: Colors.black),
@@ -203,7 +220,10 @@ class _LoginPageState extends State<LoginPage> {
                   elevation: 10,
                   minimumSize: const Size.fromHeight(50), // NEW
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  login(_emailTextController.text.trim(),
+                      _passwordTextController.text.trim(), context);
+                },
                 child: const Text(
                   'Sign in',
                   style: TextStyle(fontSize: 20),
@@ -232,5 +252,33 @@ class _LoginPageState extends State<LoginPage> {
         )),
       ),
     );
+  }
+
+  void login(String email, String password, BuildContext context) async {
+    try {
+      // try signing in
+      UserCredential userCred = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      // if succesfull leave auth screen and go to homepage
+      if (context.mounted) {
+        GoRouter.of(context).goNamed(HomePage.routeName);
+      }
+      // get the name of the user
+      var user = userCred.user;
+      print(user!.displayName.toString());
+      showAlert("Login successful", false);
+    } on FirebaseAuthException catch (e) {
+      // On error
+      // If user is not found
+      if (e.code == 'user-not-found') {
+        showAlert("No user found for the email provided.", true);
+      }
+      // If password is wrong
+      if (e.code == 'wrong-password') {
+        showAlert("Authentication failed: Wrong password.", true);
+      }
+    } catch (e) {
+      showAlert("Something went wrong please try again", true);
+    }
   }
 }

@@ -1,19 +1,34 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class RegisterUser extends StatefulWidget {
-  const RegisterUser({
+class RegisterUserPage extends StatefulWidget {
+  const RegisterUserPage({
     super.key,
   });
+  static String get routeName => 'register';
+  static String get routeLocation => routeName;
 
   @override
-  State<RegisterUser> createState() => _RegisterUserState();
+  State<RegisterUserPage> createState() => _RegisterUserState();
 }
 
 bool passwordVisible = false;
 
-class _RegisterUserState extends State<RegisterUser> {
+class _RegisterUserState extends State<RegisterUserPage> {
+  final _firstnameTextController = TextEditingController();
+  final _lastnameTextController = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+
+  void showAlert(String alert, bool isError) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(alert),
+      backgroundColor: isError ? Colors.red : Colors.green,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle defaultStyle =
@@ -25,10 +40,9 @@ class _RegisterUserState extends State<RegisterUser> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios,
+            Icons.clear,
             color: Colors.black,
           ),
-          iconSize: 20.0,
           onPressed: () {
             context.pop();
           },
@@ -75,8 +89,9 @@ class _RegisterUserState extends State<RegisterUser> {
               height: 20,
             ),
             const Text(
-              'Create an account to manage your prescriptions in a safe and responsible way',
+              'Create an account to recieve and manage your prescriptions in a safe and responsible way',
               style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(
               height: 20,
@@ -145,31 +160,59 @@ class _RegisterUserState extends State<RegisterUser> {
               height: 20,
             ),
             TextFormField(
+                controller: _firstnameTextController,
                 decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[200],
-              labelText: 'Full name',
-              hintText: 'Full name',
-              prefixIcon: const Icon(Icons.person_2_outlined),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15.0),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade200,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15.0),
-                borderSide: BorderSide(
-                  color: Colors.grey.shade500,
-                  width: 1,
-                ),
-              ),
-            )),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  labelText: 'First names',
+                  hintText: 'First names',
+                  prefixIcon: const Icon(Icons.person_2_outlined),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade500,
+                      width: 1,
+                    ),
+                  ),
+                )),
             const SizedBox(
               height: 20,
             ),
             TextFormField(
+                controller: _lastnameTextController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  labelText: 'Last name',
+                  hintText: 'Last name',
+                  prefixIcon: const Icon(Icons.person_2_outlined),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade500,
+                      width: 1,
+                    ),
+                  ),
+                )),
+            const SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+                controller: _emailTextController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   filled: true,
@@ -196,6 +239,7 @@ class _RegisterUserState extends State<RegisterUser> {
               height: 20,
             ),
             TextFormField(
+                controller: _passwordTextController,
                 obscureText: !passwordVisible,
                 decoration: InputDecoration(
                   suffixIcon: IconButton(
@@ -237,7 +281,30 @@ class _RegisterUserState extends State<RegisterUser> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50), // NEW
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  User? user;
+                  try {
+                    UserCredential userCredential = await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: _emailTextController.text.trim(),
+                            password: _emailTextController.text.trim());
+
+                    user = userCredential.user;
+                    await user!.updateDisplayName(
+                        '${_firstnameTextController.text.trim()} ${_lastnameTextController.text.trim()}');
+                    await user.reload();
+                    user = FirebaseAuth.instance.currentUser;
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'weak-password') {
+                      showAlert('The password provided is too weak.', true);
+                    } else if (e.code == 'email-already-in-use') {
+                      showAlert(
+                          'The account already exists for that email.', true);
+                    }
+                  } catch (e) {
+                    showAlert(e.toString(), true);
+                  }
+                },
                 child: const Text(
                   'Continue',
                   style: TextStyle(fontSize: 20),
