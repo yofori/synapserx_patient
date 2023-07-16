@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "465308159478-c78me2ip5g4gq49eg4jv9vrt3tr0jqt7.apps.googleusercontent.com",
+          "client_id": "465308159478-s7udqvqnpfhjsufsg67gu50duv7kk8m1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.synapserx_patient",
+            "certificate_hash": "3a44b56b90a20fdda6bc1733f32996ee6324c09e"
+          }
+        },
+        {
+          "client_id": "465308159478-m872d361vpbtc9pcicfahi80evh45q9h.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

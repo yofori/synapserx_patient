@@ -1,21 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:synapserx_patient/pages/registeruser.dart';
-import '../main.dart';
 import '../pages/forgotpassword.dart';
 import '../pages/landing.dart';
 import '../pages/loginpage.dart';
+import '../pages/splash.dart';
 import '../widgets/homepage.dart';
 import '../widgets/myprescriptions.dart';
 import 'auth_provider.dart';
-import 'user_provider.dart';
 
 final _key = GlobalKey<NavigatorState>();
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
-  final notifier = ref.watch(userDataProvider.notifier);
   return GoRouter(
     navigatorKey: _key,
     debugLogDiagnostics: true,
@@ -38,14 +35,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(
               path: RegisterUserPage.routeLocation,
               name: RegisterUserPage.routeName,
-              builder: (context, state) {
+              builder: (BuildContext context, GoRouterState state) {
                 return const RegisterUserPage();
               },
             ),
             GoRoute(
               path: ForgottenPasswordPage.routeLocation,
               name: ForgottenPasswordPage.routeName,
-              builder: (context, state) => const ForgottenPasswordPage(),
+              builder: (BuildContext context, GoRouterState state) =>
+                  const ForgottenPasswordPage(),
             ),
           ]),
       StatefulShellRoute.indexedStack(
@@ -77,30 +75,26 @@ final routerProvider = Provider<GoRouter>((ref) {
           ])
     ],
     redirect: (context, state) {
-      // If our async state is loading, don't perform redirects, yet
+      // // If our async state is loading, don't perform redirects, yet
       if (authState.isLoading || authState.hasError) return null;
-
-      // Here we guarantee that hasData == true, i.e. we have a readable value
-
-      // This has to do with how the FirebaseAuth SDK handles the "log-in" state
-      // Returning `null` means "we are not authorized"
       final isAuth = authState.valueOrNull != null;
-
-      if (isAuth) {
-        var user = FirebaseAuth.instance.currentUser;
-        notifier.setFullname(user!.displayName.toString());
-      }
-
       final isSplash = state.location == SplashPage.routeLocation;
-      if (isSplash) {
-        return isAuth ? HomePage.routeLocation : LoginPage.routeLocation;
-      }
-
       final isLoggingIn = state.location == LoginPage.routeLocation;
-      if (isLoggingIn) return isAuth ? HomePage.routeLocation : null;
-
-      // return isAuth ? null : SplashPage.routeLocation;
-      return null;
+      final isPasswordReset =
+          state.location == ForgottenPasswordPage.routeLocation;
+      final isSignup = state.location == RegisterUserPage.routeLocation;
+      final isHomePage = state.location == HomePage.routeLocation;
+      if (isSplash) {
+        return null;
+      } else if (isAuth && isLoggingIn) {
+        return HomePage.routeLocation;
+      } else if (isLoggingIn && isAuth) {
+        return HomePage.routeLocation;
+      } else if (isLoggingIn || isSignup || isPasswordReset && !isAuth) {
+        return null;
+      } else if (isHomePage && !isAuth) {
+        return LoginPage.routeLocation;
+      }
     },
   );
 });

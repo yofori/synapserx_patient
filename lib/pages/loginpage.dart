@@ -1,20 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:synapserx_patient/widgets/homepage.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+import '../providers/user_provider.dart';
+
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
   static String get routeName => 'login';
   static String get routeLocation => '/$routeName';
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
 bool passwordVisible = false;
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
@@ -23,6 +26,36 @@ class _LoginPageState extends State<LoginPage> {
       content: Text(alert),
       backgroundColor: isError ? Colors.red : Colors.green,
     ));
+  }
+
+  void login(String email, String password, BuildContext context) async {
+    final notifier = ref.watch(userDataProvider.notifier);
+    try {
+      // try signing in
+      UserCredential userCred = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      // get the name of the user
+      var user = userCred.user;
+      // set display name
+      notifier.setFullname(user!.displayName.toString());
+      showAlert("Login successful", false);
+      // if succesfull leave auth screen and go to homepage
+      if (context.mounted) {
+        GoRouter.of(context).goNamed(HomePage.routeName);
+      }
+    } on FirebaseAuthException catch (e) {
+      // On error
+      // If user is not found
+      if (e.code == 'user-not-found') {
+        showAlert("No user found for the email provided.", true);
+      }
+      // If password is wrong
+      else if (e.code == 'wrong-password') {
+        showAlert("Authentication failed: Wrong password.", true);
+      } else {
+        showAlert(e.message.toString(), true);
+      }
+    }
   }
 
   @override
@@ -252,33 +285,5 @@ class _LoginPageState extends State<LoginPage> {
         )),
       ),
     );
-  }
-
-  void login(String email, String password, BuildContext context) async {
-    try {
-      // try signing in
-      UserCredential userCred = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      // if succesfull leave auth screen and go to homepage
-      if (context.mounted) {
-        GoRouter.of(context).goNamed(HomePage.routeName);
-      }
-      // get the name of the user
-      var user = userCred.user;
-      print(user!.displayName.toString());
-      showAlert("Login successful", false);
-    } on FirebaseAuthException catch (e) {
-      // On error
-      // If user is not found
-      if (e.code == 'user-not-found') {
-        showAlert("No user found for the email provided.", true);
-      }
-      // If password is wrong
-      if (e.code == 'wrong-password') {
-        showAlert("Authentication failed: Wrong password.", true);
-      }
-    } catch (e) {
-      showAlert("Something went wrong please try again", true);
-    }
   }
 }

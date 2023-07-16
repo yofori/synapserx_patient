@@ -49,7 +49,7 @@ class _RegisterUserState extends State<RegisterUserPage> {
         ),
       ),
       bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(10.0),
           child: RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
@@ -86,7 +86,7 @@ class _RegisterUserState extends State<RegisterUserPage> {
               textAlign: TextAlign.left,
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             const Text(
               'Create an account to recieve and manage your prescriptions in a safe and responsible way',
@@ -94,7 +94,7 @@ class _RegisterUserState extends State<RegisterUserPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +157,7 @@ class _RegisterUserState extends State<RegisterUserPage> {
               ],
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             TextFormField(
                 controller: _firstnameTextController,
@@ -183,7 +183,7 @@ class _RegisterUserState extends State<RegisterUserPage> {
                   ),
                 )),
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             TextFormField(
                 controller: _lastnameTextController,
@@ -209,7 +209,7 @@ class _RegisterUserState extends State<RegisterUserPage> {
                   ),
                 )),
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             TextFormField(
                 controller: _emailTextController,
@@ -236,7 +236,7 @@ class _RegisterUserState extends State<RegisterUserPage> {
                   ),
                 )),
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             TextFormField(
                 controller: _passwordTextController,
