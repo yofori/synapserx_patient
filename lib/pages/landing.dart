@@ -38,6 +38,10 @@ class _LandingPageState extends State<LandingPage> {
             icon: Icon(Icons.medical_services),
             label: 'My Prescriptions',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'My Profile',
+          ),
         ],
         currentIndex: selectedIndex,
         onTap: _goBranch,

@@ -5,9 +5,11 @@ import 'package:synapserx_patient/pages/registeruser.dart';
 import '../pages/forgotpassword.dart';
 import '../pages/landing.dart';
 import '../pages/loginpage.dart';
+import '../pages/personalinformation.dart';
 import '../pages/splash.dart';
 import '../widgets/homepage.dart';
 import '../widgets/myprescriptions.dart';
+import '../widgets/myprofile.dart';
 import 'auth_provider.dart';
 
 final _key = GlobalKey<NavigatorState>();
@@ -23,6 +25,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: SplashPage.routeName,
         builder: (context, state) {
           return const SplashPage();
+        },
+      ),
+      GoRoute(
+        path: PersonalInfoPage.routeLocation,
+        name: PersonalInfoPage.routeName,
+        builder: (context, state) {
+          return const PersonalInfoPage();
         },
       ),
       GoRoute(
@@ -69,6 +78,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: '/prescriptions',
                     pageBuilder: (context, state) => const NoTransitionPage(
                       child: MyPrescriptionsWidget(),
+                    ),
+                  )
+                ]),
+            StatefulShellBranch(
+                //navigatorKey: _shellNavigatorPrescriptionsKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: '/profile',
+                    pageBuilder: (context, state) => const NoTransitionPage(
+                      child: MyProfileWidget(),
                     ),
                   )
                 ])

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../providers/user_provider.dart';
 import '../services/auth_services.dart';
@@ -29,16 +30,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void login(String email, String password, BuildContext context) async {
     final notifier = ref.watch(userDataProvider.notifier);
-    // try {
     var user = await AuthService().signInUsingEmailPassword(
         email: email, password: password, context: context);
     if (user != null) {
       notifier.setFullname(user.displayName.toString());
       showAlert("Login successful", false);
     }
-    // } catch (e) {
-    //   showAlert(e.toString(), false);
-    // }
   }
 
   @override
@@ -51,33 +48,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      // bottomNavigationBar: Padding(
-      //     padding: const EdgeInsets.all(20.0),
-      //     child: RichText(
-      //       textAlign: TextAlign.center,
-      //       text: TextSpan(
-      //         style: defaultStyle,
-      //         children: <TextSpan>[
-      //           const TextSpan(
-      //               text: 'By signing in, you agree to the synapsePx '),
-      //           TextSpan(
-      //               text: 'Terms & Conditions',
-      //               style: linkStyle,
-      //               recognizer: TapGestureRecognizer()
-      //                 ..onTap = () {
-      //                   print('Terms of Service"');
-      //                 }),
-      //           const TextSpan(text: ' and '),
-      //           TextSpan(
-      //               text: 'Privacy Policy',
-      //               style: linkStyle,
-      //               recognizer: TapGestureRecognizer()
-      //                 ..onTap = () {
-      //                   print('Privacy Policy"');
-      //                 }),
-      //         ],
-      //       ),
-      //     )),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
@@ -91,44 +61,40 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             const SizedBox(
               height: 20,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    fixedSize: const Size(150, 45),
-                  ),
-                  onPressed: () {
-                    AuthService().signInWithGoogle(context: context);
-                  },
-                  icon: Image.asset("assets/images/icons8-google-36.png"),
-                  label: const Text(
-                    'Google',
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    fixedSize: const Size(150, 45),
-                  ),
-                  onPressed: () {},
-                  icon: const Icon(
-                    color: Colors.black,
-                    Icons.apple,
-                    size: 36.0,
-                  ),
-                  label: const Text(
-                    'Apple',
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                  ),
-                ),
-              ],
+            OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: () async {
+                await AuthService()
+                    .signInWithGoogle(context: context)
+                    .then((user) => {
+                          if (user != null)
+                            {showAlert("Login with Google successful", false)}
+                        });
+                await AuthService().getFirebaseIdToken();
+              },
+              icon: Image.asset(
+                "assets/images/icons8-google-36.png",
+                height: 24,
+              ),
+              label: const Text(
+                'Sign in with Google',
+                style: TextStyle(color: Colors.grey, fontSize: 18),
+              ),
             ),
             const SizedBox(
               height: 10,
+            ),
+            SignInWithAppleButton(
+              onPressed: () async {
+                await AuthService().signInWithApple();
+              },
+            ),
+            const SizedBox(
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

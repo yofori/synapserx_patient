@@ -4,6 +4,9 @@ import 'package:synapserx_patient/widgets/synapsepxdrawer.dart';
 
 import '../models/userdata.dart';
 import '../providers/user_provider.dart';
+import '../services/dio_client.dart';
+
+final DioClient _dioClient = DioClient();
 
 class HomePage extends ConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -58,7 +61,12 @@ class HomePage extends ConsumerWidget {
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width * 0.04),
                     //textAlign: TextAlign.left,
-                  )
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        _dioClient.test();
+                      },
+                      child: const Text('Test'))
                 ]),
           ],
         ),
