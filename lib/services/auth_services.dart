@@ -162,10 +162,15 @@ class AuthService {
     if (user != null) {
       await user.getIdToken(true).then((result) {
         token = result.toString();
-        print(token);
       });
-      developer.log(token!);
     }
     return token;
+  }
+
+  Future<String?> getFirebaseUID() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    var firebaseuid = user?.uid;
+    developer.log(firebaseuid.toString());
+    return firebaseuid;
   }
 }

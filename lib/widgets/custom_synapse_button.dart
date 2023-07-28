@@ -23,25 +23,30 @@ class RxButton extends StatelessWidget {
         //onTap: widget.onSelect,
         onTap: onTap,
         child: Card(
-            color: Colors.deepPurple[50],
+            color: Colors.deepPurple,
             child: Container(
               height: height,
               width: width,
               alignment: Alignment.center,
-              margin: const EdgeInsets.all(5.0),
+              margin: const EdgeInsets.all(10.0),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
                       icon,
-                      size: width! * 0.30,
+                      size: width! * 0.25,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(
+                      height: 5,
                     ),
                     Text(
                       title,
                       textAlign: TextAlign.center,
                       maxLines: 2,
-                      style: TextStyle(fontSize: width! * 0.17),
+                      style: TextStyle(
+                          fontSize: width! * 0.13, color: Colors.white),
                     )
                   ]),
             )),

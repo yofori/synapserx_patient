@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:synapserx_patient/pages/registeruser.dart';
 import '../pages/forgotpassword.dart';
+import '../pages/insurancepage.dart';
 import '../pages/landing.dart';
 import '../pages/loginpage.dart';
 import '../pages/personalinformation.dart';
@@ -31,7 +32,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: PersonalInfoPage.routeLocation,
         name: PersonalInfoPage.routeName,
         builder: (context, state) {
-          return const PersonalInfoPage();
+          return PersonalInfoPage();
+        },
+      ),
+      GoRoute(
+        path: InsurancePage.routeLocation,
+        name: InsurancePage.routeName,
+        builder: (context, state) {
+          return InsurancePage();
         },
       ),
       GoRoute(

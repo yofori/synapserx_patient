@@ -1,10 +1,16 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/userprofile.dart';
 import 'dio_tokens.dart';
 import 'settings.dart';
 
-class DioClient {
+abstract class ProfileRepository {
+  Future<UserProfile> getProfile();
+}
+
+class DioClient implements ProfileRepository {
   DioClient()
       : _dio = Dio(
           BaseOptions(
@@ -33,4 +39,17 @@ class DioClient {
       return data;
     }
   }
+
+  @override
+  Future<UserProfile> getProfile() async {
+    try {
+      Response response = await _dio.get('/user/getprofile');
+      print(response.data);
+      return UserProfile.fromJson(response.data);
+    } on DioException catch (err) {
+      throw Exception(err.message);
+    }
+  }
 }
+
+// final dioClientProvider = Provider<DioClient>((ref) => DioClient());

@@ -3,8 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
-import '../providers/user_provider.dart';
 import '../services/auth_services.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -29,11 +27,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void login(String email, String password, BuildContext context) async {
-    final notifier = ref.watch(userDataProvider.notifier);
+    //final notifier = ref.watch(userDataProvider.notifier);
     var user = await AuthService().signInUsingEmailPassword(
         email: email, password: password, context: context);
     if (user != null) {
-      notifier.setFullname(user.displayName.toString());
+      //notifier.setFullname(user.displayName.toString());
       showAlert("Login successful", false);
     }
   }

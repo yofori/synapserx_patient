@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:synapserx_patient/services/auth_services.dart';
 import 'package:synapserx_patient/widgets/synapsepxdrawer.dart';
-
-import '../models/userdata.dart';
-import '../providers/user_provider.dart';
 import '../services/dio_client.dart';
 
 final DioClient _dioClient = DioClient();
@@ -15,7 +13,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final UserData userData = ref.watch(userDataProvider);
+    //final UserData userData = ref.watch(userDataProvider);
     return Scaffold(
       drawer: const PxDrawer(),
       appBar: AppBar(),
@@ -48,7 +46,7 @@ class HomePage extends ConsumerWidget {
                     const SizedBox(
                       height: 5,
                     ),
-                    Text(userData.fullname)
+                    const Text('userData.fullname')
                   ]),
                 ])),
             Column(
@@ -66,7 +64,17 @@ class HomePage extends ConsumerWidget {
                       onPressed: () {
                         _dioClient.test();
                       },
-                      child: const Text('Test'))
+                      child: const Text('Test')),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await AuthService().getFirebaseUID();
+                      },
+                      child: const Text('Get UID')),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await _dioClient.getProfile();
+                      },
+                      child: const Text('Get Profile'))
                 ]),
           ],
         ),
