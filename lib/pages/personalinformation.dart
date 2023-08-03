@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:synapserx_patient/providers/userprofile_provider.dart';
+import 'package:synapserx_patient/services/dio_client.dart';
 import '../widgets/genderselector.dart';
 
-class PersonalInfoPage extends ConsumerWidget {
-  PersonalInfoPage({Key? key}) : super(key: key);
+class PersonalInfoPage extends ConsumerStatefulWidget {
+  const PersonalInfoPage({Key? key}) : super(key: key);
   static String get routeName => 'personalinfo';
   static String get routeLocation => '/$routeName';
+
+  @override
+  ConsumerState<PersonalInfoPage> createState() => _PersonalInfoPageState();
+}
+
+class _PersonalInfoPageState extends ConsumerState<PersonalInfoPage> {
   final _formKey = GlobalKey<FormState>();
   final _firstnameTextController = TextEditingController();
   final _lastnameTextController = TextEditingController();
@@ -23,16 +30,46 @@ class PersonalInfoPage extends ConsumerWidget {
     Gender("Others", Icons.transgender, false)
   ];
   late String selectedGender = '';
-  late int selectedGenderIndex;
-  // final bool ageIsEstimated = false;
+  late int selectedGenderIndex = 0;
+  late bool isAgeEstimated = false;
+
+  var params = {};
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final profileProvider = ref.watch(asyncUserProfileProvider);
     final notifier = ref.watch(asyncUserProfileProvider.notifier);
     return Scaffold(
         appBar: AppBar(
           title: const Text('Personal Information'),
+          actions: [
+            Consumer(
+              builder: (context, ref, child) {
+                final value = ref.watch(isSaveButtonEnabledProvider);
+                return value
+                    ? TextButton(
+                        onPressed: () async {
+                          generateParams();
+                          await ref
+                              .watch(dioClientProvider)
+                              .updateProfileInfo(data: params)
+                              .then((updateOutcome) {
+                            if (updateOutcome) {
+                              ref
+                                  .watch(isSaveButtonEnabledProvider.notifier)
+                                  .saveEnabled(false);
+                              ref.invalidate(asyncUserProfileProvider);
+                            }
+                          });
+                        },
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
+                        ))
+                    : Container();
+              },
+            ),
+          ],
         ),
         body: profileProvider.when(
           data: (profile) {
@@ -46,19 +83,20 @@ class PersonalInfoPage extends ConsumerWidget {
             //make entry for gender on custom gender selecter;
             selectedGender = profile.gender.toString();
             switch (selectedGender) {
-              case "Male":
+              case "male":
                 selectedGenderIndex = 0;
                 break;
-              case "Female":
+              case "female":
                 selectedGenderIndex = 1;
                 break;
-              case "Others":
+              case "others":
                 selectedGenderIndex = 2;
                 break;
             }
 
             pxAgeController.text = profile.ageAtRegistration.toString();
-            pxDOBController.text = profile.dateOfBirth.toString();
+            pxDOBController.text = DateFormat("yyyy-MM-dd")
+                .format(DateTime.parse(profile.dateOfBirth.toString()));
             bool ageIsEstimated = profile.isAgeEstimated;
             return Padding(
               padding: const EdgeInsets.all(15.0),
@@ -71,6 +109,9 @@ class PersonalInfoPage extends ConsumerWidget {
                             height: 5,
                           ),
                           TextFormField(
+                              onChanged: (value) {
+                                enableSaveButton();
+                              },
                               controller: _firstnameTextController,
                               decoration: InputDecoration(
                                 filled: true,
@@ -97,6 +138,9 @@ class PersonalInfoPage extends ConsumerWidget {
                             height: 15,
                           ),
                           TextFormField(
+                              onChanged: (value) {
+                                enableSaveButton();
+                              },
                               controller: _lastnameTextController,
                               decoration: InputDecoration(
                                 filled: true,
@@ -137,7 +181,7 @@ class PersonalInfoPage extends ConsumerWidget {
                               selectedGenderIndex: selectedGenderIndex,
                               onSelect: (String gender) {
                                 selectedGender = gender;
-                                print(gender);
+                                enableSaveButton();
                               }),
                           const SizedBox(
                             height: 10,
@@ -148,6 +192,8 @@ class PersonalInfoPage extends ConsumerWidget {
                                   value: ageIsEstimated,
                                   onChanged: (bool? value) {
                                     notifier.setIsAgeEastimated(!value!);
+                                    isAgeEstimated = value;
+                                    enableSaveButton();
                                   }),
                               const Text('Age is estimated'),
                               const SizedBox(
@@ -169,6 +215,7 @@ class PersonalInfoPage extends ConsumerWidget {
                                                           pxAgeController.text),
                                                   today.month,
                                                   today.day));
+                                      enableSaveButton();
                                     }),
                                     keyboardType: TextInputType.number,
                                     enabled: ageIsEstimated,
@@ -191,7 +238,9 @@ class PersonalInfoPage extends ConsumerWidget {
                               width: 160,
                               //height: 36,
                               child: TextFormField(
-                                  onChanged: ((value) {}),
+                                  onChanged: (value) {
+                                    enableSaveButton();
+                                  },
                                   validator: (val) {
                                     if (val!.isEmpty) {
                                       return "Patient's DOB is required";
@@ -210,18 +259,24 @@ class PersonalInfoPage extends ConsumerWidget {
                                               DateTime? pickedDate =
                                                   await showDatePicker(
                                                       context: context,
-                                                      initialDate: DateTime
-                                                          .now(), //get today's date
-                                                      firstDate: DateTime(
-                                                          1910), //DateTime.now() - not to allow to choose before today.
-                                                      lastDate: DateTime.now());
-                                              pxDOBController.text =
-                                                  DateFormat("yyyy-MM-dd")
-                                                      .format(pickedDate!);
-                                              pxAgeController.text =
-                                                  (DateTime.now().year -
-                                                          pickedDate.year)
-                                                      .toString();
+                                                      initialDate:
+                                                          DateTime.parse(
+                                                              pxDOBController
+                                                                  .text),
+                                                      firstDate: DateTime(1910),
+                                                      lastDate: DateTime
+                                                          .now()); //DateTime.now() - not to allow to choose before today.
+                                              if (pickedDate != null) {
+                                                pxDOBController.text =
+                                                    DateFormat("yyyy-MM-dd")
+                                                        .format(pickedDate);
+
+                                                pxAgeController.text =
+                                                    (DateTime.now().year -
+                                                            pickedDate.year)
+                                                        .toString();
+                                              }
+                                              enableSaveButton();
                                             },
                                       child: const Icon(Icons.calendar_month),
                                     ),
@@ -234,6 +289,9 @@ class PersonalInfoPage extends ConsumerWidget {
                             height: 10,
                           ),
                           TextFormField(
+                              onChanged: (value) {
+                                enableSaveButton();
+                              },
                               controller: _telephoneTextController,
                               decoration: InputDecoration(
                                 filled: true,
@@ -260,6 +318,9 @@ class PersonalInfoPage extends ConsumerWidget {
                             height: 10,
                           ),
                           TextFormField(
+                              onChanged: (value) {
+                                enableSaveButton();
+                              },
                               controller: _emailTextController,
                               decoration: InputDecoration(
                                 filled: true,
@@ -286,6 +347,9 @@ class PersonalInfoPage extends ConsumerWidget {
                             height: 10,
                           ),
                           TextFormField(
+                              onChanged: (value) {
+                                enableSaveButton();
+                              },
                               controller: _niaNoTextController,
                               decoration: InputDecoration(
                                 filled: true,
@@ -312,6 +376,9 @@ class PersonalInfoPage extends ConsumerWidget {
                             height: 15,
                           ),
                           TextFormField(
+                              onChanged: (value) {
+                                enableSaveButton();
+                              },
                               controller: _nhisNoTextController,
                               decoration: InputDecoration(
                                 filled: true,
@@ -342,5 +409,25 @@ class PersonalInfoPage extends ConsumerWidget {
               style: const TextStyle(color: Colors.white, fontSize: 15)),
           loading: (() => const Center(child: CircularProgressIndicator())),
         ));
+  }
+
+  void enableSaveButton() {
+    ref.watch(isSaveButtonEnabledProvider.notifier).saveEnabled(true);
+  }
+
+  void generateParams() {
+    params = {
+      "surname": _lastnameTextController.text,
+      "firstname": _firstnameTextController.text,
+      "dateOfBirth": pxDOBController.text,
+      "ageAtRegistration": pxAgeController.text,
+      "isAgeEstimated": isAgeEstimated,
+      "telephone": _telephoneTextController.text,
+      "email": _emailTextController.text,
+      "gender": selectedGender.toLowerCase(),
+      "nationalIdNo": _niaNoTextController.text,
+      "nationalHealthInsurancedNo": _nhisNoTextController.text
+    };
+    print(params);
   }
 }

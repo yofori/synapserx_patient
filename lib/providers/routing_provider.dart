@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:synapserx_patient/pages/myqrcodepage.dart';
 import 'package:synapserx_patient/pages/registeruser.dart';
 import '../pages/forgotpassword.dart';
 import '../pages/insurancepage.dart';
@@ -32,7 +33,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: PersonalInfoPage.routeLocation,
         name: PersonalInfoPage.routeName,
         builder: (context, state) {
-          return PersonalInfoPage();
+          return const PersonalInfoPage();
         },
       ),
       GoRoute(
@@ -40,6 +41,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: InsurancePage.routeName,
         builder: (context, state) {
           return InsurancePage();
+        },
+      ),
+      GoRoute(
+        path: QRPage.routeLocation,
+        name: QRPage.routeName,
+        builder: (context, state) {
+          return const QRPage();
         },
       ),
       GoRoute(

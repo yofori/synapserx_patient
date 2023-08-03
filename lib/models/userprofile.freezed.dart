@@ -33,6 +33,7 @@ mixin _$UserProfile {
   String? get email => throw _privateConstructorUsedError;
   String? get nationalIdNo => throw _privateConstructorUsedError;
   String? get nationalHealthInsurancedNo => throw _privateConstructorUsedError;
+  String? get patientuid => throw _privateConstructorUsedError;
   bool? get active => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -61,6 +62,7 @@ abstract class $UserProfileCopyWith<$Res> {
       String? email,
       String? nationalIdNo,
       String? nationalHealthInsurancedNo,
+      String? patientuid,
       bool? active});
 }
 
@@ -90,6 +92,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? email = freezed,
     Object? nationalIdNo = freezed,
     Object? nationalHealthInsurancedNo = freezed,
+    Object? patientuid = freezed,
     Object? active = freezed,
   }) {
     return _then(_value.copyWith(
@@ -145,6 +148,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.nationalHealthInsurancedNo
           : nationalHealthInsurancedNo // ignore: cast_nullable_to_non_nullable
               as String?,
+      patientuid: freezed == patientuid
+          ? _value.patientuid
+          : patientuid // ignore: cast_nullable_to_non_nullable
+              as String?,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -175,6 +182,7 @@ abstract class _$$_UserProfileCopyWith<$Res>
       String? email,
       String? nationalIdNo,
       String? nationalHealthInsurancedNo,
+      String? patientuid,
       bool? active});
 }
 
@@ -202,6 +210,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? email = freezed,
     Object? nationalIdNo = freezed,
     Object? nationalHealthInsurancedNo = freezed,
+    Object? patientuid = freezed,
     Object? active = freezed,
   }) {
     return _then(_$_UserProfile(
@@ -257,6 +266,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.nationalHealthInsurancedNo
           : nationalHealthInsurancedNo // ignore: cast_nullable_to_non_nullable
               as String?,
+      patientuid: freezed == patientuid
+          ? _value.patientuid
+          : patientuid // ignore: cast_nullable_to_non_nullable
+              as String?,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -282,6 +295,7 @@ class _$_UserProfile implements _UserProfile {
       this.email,
       this.nationalIdNo,
       this.nationalHealthInsurancedNo,
+      this.patientuid,
       this.active = false});
 
   factory _$_UserProfile.fromJson(Map<String, dynamic> json) =>
@@ -315,12 +329,14 @@ class _$_UserProfile implements _UserProfile {
   @override
   final String? nationalHealthInsurancedNo;
   @override
+  final String? patientuid;
+  @override
   @JsonKey()
   final bool? active;
 
   @override
   String toString() {
-    return 'UserProfile(fullname: $fullname, firebaseUID: $firebaseUID, surname: $surname, firstname: $firstname, title: $title, dateOfBirth: $dateOfBirth, ageAtRegistration: $ageAtRegistration, isAgeEstimated: $isAgeEstimated, gender: $gender, telephone: $telephone, email: $email, nationalIdNo: $nationalIdNo, nationalHealthInsurancedNo: $nationalHealthInsurancedNo, active: $active)';
+    return 'UserProfile(fullname: $fullname, firebaseUID: $firebaseUID, surname: $surname, firstname: $firstname, title: $title, dateOfBirth: $dateOfBirth, ageAtRegistration: $ageAtRegistration, isAgeEstimated: $isAgeEstimated, gender: $gender, telephone: $telephone, email: $email, nationalIdNo: $nationalIdNo, nationalHealthInsurancedNo: $nationalHealthInsurancedNo, patientuid: $patientuid, active: $active)';
   }
 
   @override
@@ -352,6 +368,8 @@ class _$_UserProfile implements _UserProfile {
                     nationalHealthInsurancedNo) ||
                 other.nationalHealthInsurancedNo ==
                     nationalHealthInsurancedNo) &&
+            (identical(other.patientuid, patientuid) ||
+                other.patientuid == patientuid) &&
             (identical(other.active, active) || other.active == active));
   }
 
@@ -372,6 +390,7 @@ class _$_UserProfile implements _UserProfile {
       email,
       nationalIdNo,
       nationalHealthInsurancedNo,
+      patientuid,
       active);
 
   @JsonKey(ignore: true)
@@ -403,6 +422,7 @@ abstract class _UserProfile implements UserProfile {
       final String? email,
       final String? nationalIdNo,
       final String? nationalHealthInsurancedNo,
+      final String? patientuid,
       final bool? active}) = _$_UserProfile;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
@@ -434,6 +454,8 @@ abstract class _UserProfile implements UserProfile {
   String? get nationalIdNo;
   @override
   String? get nationalHealthInsurancedNo;
+  @override
+  String? get patientuid;
   @override
   bool? get active;
   @override

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:synapserx_patient/pages/myqrcodepage.dart';
 import 'package:synapserx_patient/pages/personalinformation.dart';
 import 'package:synapserx_patient/widgets/custom_synapse_button.dart';
+import 'package:icofont_flutter/icofont_flutter.dart';
 
 import '../pages/insurancepage.dart';
 
@@ -43,6 +45,28 @@ class MyProfileWidget extends ConsumerWidget {
                         width: buttonwidth,
                         icon: Icons.payment,
                         title: 'Insurance Policies',
+                        onTap: () {
+                          GoRouter.of(context)
+                              .push(InsurancePage.routeLocation);
+                        }),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RxButton(
+                        height: buttonwidth,
+                        width: buttonwidth,
+                        icon: Icons.qr_code,
+                        title: 'My QR Code',
+                        onTap: () {
+                          GoRouter.of(context).push(QRPage.routeLocation);
+                        }),
+                    RxButton(
+                        height: buttonwidth,
+                        width: buttonwidth,
+                        icon: IcoFontIcons.doctor,
+                        title: 'My Prescribers',
                         onTap: () {
                           GoRouter.of(context)
                               .push(InsurancePage.routeLocation);

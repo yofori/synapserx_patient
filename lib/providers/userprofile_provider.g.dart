@@ -22,5 +22,22 @@ final asyncUserProfileProvider =
 );
 
 typedef _$AsyncUserProfile = AutoDisposeAsyncNotifier<UserProfile>;
+String _$isSaveButtonEnabledHash() =>
+    r'4c0291fd90f68a41e6b26a26a012120bff237969';
+
+/// See also [IsSaveButtonEnabled].
+@ProviderFor(IsSaveButtonEnabled)
+final isSaveButtonEnabledProvider =
+    AutoDisposeNotifierProvider<IsSaveButtonEnabled, bool>.internal(
+  IsSaveButtonEnabled.new,
+  name: r'isSaveButtonEnabledProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$isSaveButtonEnabledHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$IsSaveButtonEnabled = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

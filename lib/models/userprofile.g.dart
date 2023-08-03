@@ -21,6 +21,7 @@ _$_UserProfile _$$_UserProfileFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String?,
       nationalIdNo: json['nationalIdNo'] as String?,
       nationalHealthInsurancedNo: json['nationalHealthInsurancedNo'] as String?,
+      patientuid: json['patientuid'] as String?,
       active: json['active'] as bool? ?? false,
     );
 
@@ -39,5 +40,6 @@ Map<String, dynamic> _$$_UserProfileToJson(_$_UserProfile instance) =>
       'email': instance.email,
       'nationalIdNo': instance.nationalIdNo,
       'nationalHealthInsurancedNo': instance.nationalHealthInsurancedNo,
+      'patientuid': instance.patientuid,
       'active': instance.active,
     };

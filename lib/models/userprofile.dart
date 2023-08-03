@@ -18,6 +18,7 @@ class UserProfile with _$UserProfile {
       String? email,
       String? nationalIdNo,
       String? nationalHealthInsurancedNo,
+      String? patientuid,
       @Default(false) bool? active}) = _UserProfile;
 
   static UserProfile get initialState => const UserProfile();

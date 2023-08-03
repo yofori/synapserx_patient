@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:synapserx_patient/models/userprofile.dart';
 import 'package:synapserx_patient/services/dio_client.dart';
@@ -22,4 +23,14 @@ class AsyncUserProfile extends _$AsyncUserProfile {
     final value = state.value;
     state = AsyncData(value!.copyWith(isAgeEstimated: !checked));
   }
+}
+
+@riverpod
+class IsSaveButtonEnabled extends _$IsSaveButtonEnabled {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void saveEnabled(bool value) => state = value;
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/userprofile.dart';
 import 'dio_tokens.dart';
@@ -50,6 +51,19 @@ class DioClient implements ProfileRepository {
       throw Exception(err.message);
     }
   }
+
+  Future<bool> updateProfileInfo({required data}) async {
+    try {
+      Response response = await _dio.put('/user/updateprofile', data: data);
+      if (response.statusCode == 200) {
+        print('Successfully updated patient profile');
+        return true;
+      }
+    } on DioException catch (err) {
+      debugPrint(err.message);
+    }
+    return false;
+  }
 }
 
-// final dioClientProvider = Provider<DioClient>((ref) => DioClient());
+final dioClientProvider = Provider<DioClient>((ref) => DioClient());
