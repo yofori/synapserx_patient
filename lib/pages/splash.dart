@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,14 +12,6 @@ class SplashPage extends ConsumerStatefulWidget {
 }
 
 class _SplashPageState extends ConsumerState<SplashPage> {
-  void getLoginUserDisplayName() async {
-    //final notifier = ref.watch(userDataProvider.notifier);
-    User? userCred = FirebaseAuth.instance.currentUser;
-    // if (userCred != null) {
-    //   notifier.setFullname(userCred.displayName.toString());
-    // }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -33,7 +24,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    getLoginUserDisplayName();
     return const Scaffold(
       body: Center(child: Text("Splash Page")),
     );

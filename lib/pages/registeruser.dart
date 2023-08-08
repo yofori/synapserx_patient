@@ -2,6 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:synapserx_patient/services/dio_client.dart';
+
+import '../widgets/synapsepx_snackbar.dart';
+
+final DioClient _dioClient = DioClient();
 
 class RegisterUserPage extends StatefulWidget {
   const RegisterUserPage({
@@ -15,12 +20,14 @@ class RegisterUserPage extends StatefulWidget {
 }
 
 bool passwordVisible = false;
+var params = {};
 
 class _RegisterUserState extends State<RegisterUserPage> {
   final _firstnameTextController = TextEditingController();
   final _lastnameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+  final _telephoneTextController = TextEditingController();
 
   void showAlert(String alert, bool isError) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -239,6 +246,33 @@ class _RegisterUserState extends State<RegisterUserPage> {
               height: 15,
             ),
             TextFormField(
+                controller: _telephoneTextController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  labelText: 'Telephone',
+                  hintText: 'Telephone',
+                  prefixIcon: const Icon(Icons.phone),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade500,
+                      width: 1,
+                    ),
+                  ),
+                )),
+            const SizedBox(
+              height: 15,
+            ),
+            TextFormField(
                 controller: _passwordTextController,
                 obscureText: !passwordVisible,
                 decoration: InputDecoration(
@@ -294,6 +328,21 @@ class _RegisterUserState extends State<RegisterUserPage> {
                         '${_firstnameTextController.text.trim()} ${_lastnameTextController.text.trim()}');
                     await user.reload();
                     user = FirebaseAuth.instance.currentUser;
+                    //create a profile
+                    params = {
+                      "surname": _lastnameTextController.text,
+                      "firstname": _firstnameTextController.text,
+                      "email": _emailTextController.text,
+                      "telephone": _telephoneTextController.text
+                    };
+                    await _dioClient
+                        .createProfileInfo(data: params)
+                        .then((value) {
+                      if (value) {
+                        GlobalSnackBar.show(context, 'User Profile  created',
+                            Colors.green, false);
+                      }
+                    });
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'weak-password') {
                       showAlert('The password provided is too weak.', true);

@@ -5,6 +5,10 @@ import 'firebase_options.dart';
 import 'providers/routing_provider.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

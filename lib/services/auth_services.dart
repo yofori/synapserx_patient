@@ -61,8 +61,8 @@ class AuthService {
   //Sign out
   static Future<void> signOut({required BuildContext context}) async {
     try {
-      await GoogleSignIn().disconnect();
       await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().disconnect();
     } catch (e) {
       print(e.toString());
     }
@@ -117,10 +117,6 @@ class AuthService {
   }
 
   Future<UserCredential> signInWithApple() async {
-    // To prevent replay attacks with the credential returned from Apple, we
-    // include a nonce in the credential request. When signing in with
-    // Firebase, the nonce in the id token returned by Apple, is expected to
-    // match the sha256 hash of `rawNonce`.
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
@@ -132,13 +128,8 @@ class AuthService {
       ],
       nonce: nonce,
       webAuthenticationOptions: WebAuthenticationOptions(
-        // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
         clientId: 'com.synapsepx.patient',
-
-        redirectUri:
-            // For web your redirect URI needs to be the host of the "current page",
-            // while for Android you will be using the API server that redirects back into your app via a deep link
-            Uri.parse(
+        redirectUri: Uri.parse(
           'https://synapsepx.firebaseapp.com/__/auth/handler',
         ),
       ),

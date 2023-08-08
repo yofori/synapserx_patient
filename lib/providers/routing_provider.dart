@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:synapserx_patient/pages/createprofile.dart';
 import 'package:synapserx_patient/pages/myqrcodepage.dart';
 import 'package:synapserx_patient/pages/registeruser.dart';
 import '../pages/forgotpassword.dart';
 import '../pages/insurancepage.dart';
 import '../pages/landing.dart';
 import '../pages/loginpage.dart';
+import '../pages/myprescriberspage.dart';
 import '../pages/personalinformation.dart';
 import '../pages/splash.dart';
 import '../widgets/homepage.dart';
@@ -48,6 +50,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: QRPage.routeName,
         builder: (context, state) {
           return const QRPage();
+        },
+      ),
+      GoRoute(
+        path: MyPrescribersPage.routeLocation,
+        name: MyPrescribersPage.routeName,
+        builder: (context, state) {
+          return const MyPrescribersPage();
+        },
+      ),
+      GoRoute(
+        path: CreateProfilePage.routeLocation,
+        name: CreateProfilePage.routeName,
+        builder: (context, state) {
+          return const CreateProfilePage();
         },
       ),
       GoRoute(

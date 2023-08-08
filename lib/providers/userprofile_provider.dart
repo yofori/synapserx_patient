@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:synapserx_patient/models/userprofile.dart';
 import 'package:synapserx_patient/services/dio_client.dart';
@@ -10,6 +9,9 @@ class AsyncUserProfile extends _$AsyncUserProfile {
   Future<UserProfile> _fetchUserProfile() async {
     state = const AsyncLoading();
     final profile = await DioClient().getProfile();
+    if (profile.fullname != null) {
+      ref.read(setFullnameProvider.notifier).setFullname(profile.fullname!);
+    }
     return profile;
   }
 
@@ -33,4 +35,14 @@ class IsSaveButtonEnabled extends _$IsSaveButtonEnabled {
   }
 
   void saveEnabled(bool value) => state = value;
+}
+
+@riverpod
+class SetFullname extends _$SetFullname {
+  @override
+  String build() {
+    return '';
+  }
+
+  void setFullname(String value) => state = value;
 }

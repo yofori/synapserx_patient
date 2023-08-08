@@ -21,7 +21,7 @@ class UserProfile with _$UserProfile {
       String? patientuid,
       @Default(false) bool? active}) = _UserProfile;
 
-  static UserProfile get initialState => const UserProfile();
+  static Future<UserProfile> get initialState async => const UserProfile();
 
   factory UserProfile.fromJson(Map<String, dynamic> json) =>
       _$UserProfileFromJson(json);

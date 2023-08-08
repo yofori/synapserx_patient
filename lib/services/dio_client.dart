@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:synapserx_patient/models/associations.dart';
+import 'package:synapserx_patient/providers/userprofile_provider.dart';
 import '../models/userprofile.dart';
 import 'dio_tokens.dart';
 import 'settings.dart';
@@ -48,8 +50,9 @@ class DioClient implements ProfileRepository {
       print(response.data);
       return UserProfile.fromJson(response.data);
     } on DioException catch (err) {
-      throw Exception(err.message);
+      if (err.response?.data['message'] == 'no-profile-exists') {}
     }
+    return UserProfile.initialState;
   }
 
   Future<bool> updateProfileInfo({required data}) async {
@@ -63,6 +66,33 @@ class DioClient implements ProfileRepository {
       debugPrint(err.message);
     }
     return false;
+  }
+
+  Future<bool> createProfileInfo({required data}) async {
+    try {
+      Response response = await _dio.post('/user/createprofile', data: data);
+      if (response.statusCode == 200) {
+        print('Successfully created patient profile');
+        return true;
+      }
+    } on DioException catch (err) {
+      debugPrint(err.message);
+    }
+    return false;
+  }
+
+  Future<List<Associations>> getPrescribers() async {
+    try {
+      Response response = await _dio.get('/user/listprescribers');
+      if (response.statusCode == 200) {
+        return (response.data as List)
+            .map((x) => Associations.fromJson(x))
+            .toList();
+      }
+    } on DioException catch (err) {
+      debugPrint(err.message);
+    }
+    return [];
   }
 }
 

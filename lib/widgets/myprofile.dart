@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:synapserx_patient/pages/myprescriberspage.dart';
 import 'package:synapserx_patient/pages/myqrcodepage.dart';
 import 'package:synapserx_patient/pages/personalinformation.dart';
 import 'package:synapserx_patient/widgets/custom_synapse_button.dart';
@@ -69,7 +70,7 @@ class MyProfileWidget extends ConsumerWidget {
                         title: 'My Prescribers',
                         onTap: () {
                           GoRouter.of(context)
-                              .push(InsurancePage.routeLocation);
+                              .push(MyPrescribersPage.routeLocation);
                         }),
                   ],
                 )

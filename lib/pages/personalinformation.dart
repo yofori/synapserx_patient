@@ -32,6 +32,7 @@ class _PersonalInfoPageState extends ConsumerState<PersonalInfoPage> {
   late String selectedGender = '';
   late int selectedGenderIndex = 0;
   late bool isAgeEstimated = false;
+  late DateTime initialDate;
 
   var params = {};
 
@@ -95,8 +96,7 @@ class _PersonalInfoPageState extends ConsumerState<PersonalInfoPage> {
             }
 
             pxAgeController.text = profile.ageAtRegistration.toString();
-            pxDOBController.text = DateFormat("yyyy-MM-dd")
-                .format(DateTime.parse(profile.dateOfBirth.toString()));
+            pxDOBController.text = profile.dateOfBirth.toString();
             bool ageIsEstimated = profile.isAgeEstimated;
             return Padding(
               padding: const EdgeInsets.all(15.0),
@@ -238,6 +238,7 @@ class _PersonalInfoPageState extends ConsumerState<PersonalInfoPage> {
                               width: 160,
                               //height: 36,
                               child: TextFormField(
+                                  readOnly: true,
                                   onChanged: (value) {
                                     enableSaveButton();
                                   },
@@ -256,16 +257,21 @@ class _PersonalInfoPageState extends ConsumerState<PersonalInfoPage> {
                                       onTap: ageIsEstimated
                                           ? null
                                           : () async {
+                                              if (pxDOBController.text ==
+                                                  'null') {
+                                                initialDate = DateTime.now();
+                                              } else {
+                                                initialDate = DateTime.parse(
+                                                    pxDOBController.text);
+                                              }
+
                                               DateTime? pickedDate =
                                                   await showDatePicker(
                                                       context: context,
-                                                      initialDate:
-                                                          DateTime.parse(
-                                                              pxDOBController
-                                                                  .text),
                                                       firstDate: DateTime(1910),
-                                                      lastDate: DateTime
-                                                          .now()); //DateTime.now() - not to allow to choose before today.
+                                                      lastDate: DateTime.now(),
+                                                      initialDate:
+                                                          initialDate); //DateTime.now() - not to allow to choose before today.
                                               if (pickedDate != null) {
                                                 pxDOBController.text =
                                                     DateFormat("yyyy-MM-dd")
@@ -405,8 +411,9 @@ class _PersonalInfoPageState extends ConsumerState<PersonalInfoPage> {
                       ))),
             );
           },
-          error: (err, stack) => Text("Error: $err",
-              style: const TextStyle(color: Colors.white, fontSize: 15)),
+          error: (err, stack) => Center(
+            child: Text("Error: $err", style: const TextStyle(fontSize: 15)),
+          ),
           loading: (() => const Center(child: CircularProgressIndicator())),
         ));
   }
