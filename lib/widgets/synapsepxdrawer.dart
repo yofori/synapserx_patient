@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:synapserx_patient/main.dart';
 import 'package:synapserx_patient/services/auth_services.dart';
@@ -29,7 +28,7 @@ class PxDrawer extends StatelessWidget {
               onTap: () async {
                 await AuthService.signOut(context: context);
                 GlobalData.fullname = '';
-                Navigator.pop(scaffoldMessengerKey.currentContext!);
+                //Navigator.pop(context);
                 //await FirebaseAuth.instance.signOut();
               }),
           const Divider(),

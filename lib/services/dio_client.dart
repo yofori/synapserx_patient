@@ -71,7 +71,7 @@ class DioClient implements ProfileRepository {
   Future<bool> createProfileInfo({required data}) async {
     try {
       Response response = await _dio.post('/user/createprofile', data: data);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print('Successfully created patient profile');
         return true;
       }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:synapserx_patient/providers/userprofile_provider.dart';
 import 'package:synapserx_patient/services/auth_services.dart';
 import 'package:synapserx_patient/widgets/synapsepxdrawer.dart';
 import '../services/dio_client.dart';

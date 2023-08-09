@@ -56,21 +56,6 @@ class _QRScannerOverlayState extends State<QRScannerOverlay> {
           ),
         ),
       ),
-      // Positioned(
-      //     bottom: MediaQuery.of(context).size.height * 0.2,
-      //     child: Center(
-      //       child: OutlinedButton(
-      //         style: OutlinedButton.styleFrom(
-      //             foregroundColor: Colors.white,
-      //             backgroundColor: Colors.transparent,
-      //             side: const BorderSide(color: Colors.white)),
-      //         onPressed: () {},
-      //         child: const Text(
-      //           'Tap to Scan',
-      //           style: TextStyle(color: Colors.white),
-      //         ),
-      //       ),
-      //     ))
     ]);
   }
 }
