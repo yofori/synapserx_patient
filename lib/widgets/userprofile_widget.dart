@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:synapserx_patient/main.dart';
 import 'package:synapserx_patient/providers/userprofile_provider.dart';
 import 'package:synapserx_patient/widgets/synapsepx_snackbar.dart';
+import '../providers/data_providers.dart';
 import '../services/auth_services.dart';
-import '../services/dio_client.dart';
 import '../services/settings.dart';
 import '../widgets/genderselector.dart';
 
@@ -138,7 +137,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
 
             pxAgeController.text = (profile.ageAtRegistration ?? 0).toString();
             pxDOBController.text = profile.dateOfBirth ?? '';
-            bool isAgeEstimated = profile.isAgeEstimated;
+            isAgeEstimated = profile.isAgeEstimated;
             return Padding(
               padding: const EdgeInsets.all(15.0),
               child: SingleChildScrollView(
@@ -481,8 +480,12 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
       "email": _emailTextController.text.trim(),
       "gender": selectedGender.toLowerCase(),
       "nationalIdNo": _niaNoTextController.text.trim(),
-      "nationalHealthInsurancedNo": _nhisNoTextController.text.trim()
+      "nationalHealthInsurancedNo": _nhisNoTextController.text.trim(),
     };
+    if (widget.isCreating) {
+      final status = <String, bool>{"active": true};
+      params.addEntries(status.entries);
+    }
     print(params);
   }
 
