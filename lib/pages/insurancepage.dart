@@ -56,23 +56,20 @@ class _InsurancePageState extends ConsumerState<InsurancePage> {
                                 onPressed: () {
                                   isEditing = true;
                                   insuranceCompanyNameController.text =
-                                      policylists[index]
-                                          .insuranceCompanyName
-                                          .toString();
+                                      policylists[index].insuranceCompanyName ??
+                                          '';
                                   policyStartDateController.text =
-                                      policylists[index].startDate.toString();
+                                      policylists[index].startDate ?? '';
                                   benefitPackageNameController.text =
-                                      policylists[index]
-                                          .benefitPackageName
-                                          .toString();
+                                      policylists[index].benefitPackageName ??
+                                          '';
                                   benefitPackageCodeController.text =
-                                      policylists[index]
-                                          .benefitPackageCode
-                                          .toString();
+                                      policylists[index].benefitPackageCode ??
+                                          '';
                                   policyNumberController.text =
-                                      policylists[index].policyNo.toString();
+                                      policylists[index].policyNo ?? '';
                                   policyExpiryDateController.text =
-                                      policylists[index].expiryDate.toString();
+                                      policylists[index].expiryDate ?? '';
                                   idController.text = policylists[index].id;
                                   addEditInsurancePolicy();
                                 },

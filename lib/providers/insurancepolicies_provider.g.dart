@@ -6,7 +6,7 @@ part of 'insurancepolicies_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$insurancePoliciesHash() => r'224466d60d49f4a44128ceb49160cf2c240daa64';
+String _$insurancePoliciesHash() => r'908a5f162731be3b86056dd0dcb12c554ff95bb2';
 
 /// See also [InsurancePolicies].
 @ProviderFor(InsurancePolicies)

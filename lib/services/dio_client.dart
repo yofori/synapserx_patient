@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:synapserx_patient/models/associations.dart';
 import 'package:synapserx_patient/models/insurancepolicy.dart';
+import '../models/prescription.dart';
 import '../models/userprofile.dart';
 import 'dio_tokens.dart';
 import 'settings.dart';
@@ -138,6 +139,18 @@ class DioClient {
       }
     } on DioException catch (err) {
       debugPrint(err.message);
+    }
+  }
+
+  Future<List<Prescription>> getPrescriptions() async {
+    try {
+      Response response = await _dio.get('/user/getprescriptions');
+      return (response.data as List)
+          .map((x) => Prescription.fromJson(x))
+          .toList();
+    } on DioException catch (err) {
+      final errorMessage = (err).toString();
+      throw errorMessage;
     }
   }
 }

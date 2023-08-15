@@ -9,15 +9,28 @@ class MyPrescribers extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prescribersList = ref.watch(prescribersProvider);
     return prescribersList.when(
-        data: (prescribers) => ListView(
-              children: [
-                for (final prescriber in prescribers)
-                  ListTile(
-                    title: Text(prescriber.prescriberFullname),
-                    trailing: IconButton(
-                        onPressed: () {}, icon: const Icon(Icons.delete)),
-                  )
-              ],
+        data: (prescribers) => RefreshIndicator(
+              onRefresh: () async {
+                ref.refresh(prescribersProvider);
+              },
+              child: prescribers.isNotEmpty
+                  ? ListView(
+                      children: [
+                        for (final prescriber in prescribers)
+                          ListTile(
+                            title: Text(prescriber.prescriberFullname),
+                            trailing: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.delete)),
+                          )
+                      ],
+                    )
+                  : const Center(
+                      child: Text(
+                        'You do not have any prescribers listed yet. Click the add button to scan a prescriber\'s QR Code',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
             ),
         error: (err, stack) => Text('Error: $err'),
         loading: () => const Center(
