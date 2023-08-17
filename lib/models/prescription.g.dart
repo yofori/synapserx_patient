@@ -17,6 +17,7 @@ Prescription _$PrescriptionFromJson(Map<String, dynamic> json) => Prescription(
       prescriberID: json['prescriberID'] as String?,
       prescriberMDCRegNo: json['prescriberMDCRegNo'] as String?,
       prescriberName: json['prescriberName'] as String?,
+      prescriberSignature: json['prescriberSignature'] as String?,
       prescriberInstitution: json['prescriberInstitution'] as String?,
       prescriberInstitutionName: json['prescriberInstitutionName'] as String?,
       prescriberInstitutionAddress:
@@ -50,6 +51,7 @@ Map<String, dynamic> _$PrescriptionToJson(Prescription instance) =>
       'prescriberID': instance.prescriberID,
       'prescriberMDCRegNo': instance.prescriberMDCRegNo,
       'prescriberName': instance.prescriberName,
+      'prescriberSignature': instance.prescriberSignature,
       'prescriberInstitution': instance.prescriberInstitution,
       'prescriberInstitutionName': instance.prescriberInstitutionName,
       'prescriberInstitutionAddress': instance.prescriberInstitutionAddress,

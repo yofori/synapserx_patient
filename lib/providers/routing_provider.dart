@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:synapserx_patient/pages/createprofile.dart';
 import 'package:synapserx_patient/pages/myqrcodepage.dart';
 import 'package:synapserx_patient/pages/registeruser.dart';
-import '../pages/displayprescription.dart';
 import '../pages/forgotpassword.dart';
 import '../pages/insurancepage.dart';
 import '../pages/landing.dart';
@@ -130,12 +129,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       // // If our async state is loading, don't perform redirects, yet
       if (authState.isLoading || authState.hasError) return null;
       final isAuth = authState.valueOrNull != null;
-      final isSplash = state.location == SplashPage.routeLocation;
-      final isLoggingIn = state.location == LoginPage.routeLocation;
+      final isSplash = state.matchedLocation == SplashPage.routeLocation;
+      final isLoggingIn = state.matchedLocation == LoginPage.routeLocation;
       final isPasswordReset =
-          state.location == ForgottenPasswordPage.routeLocation;
-      final isSignup = state.location == RegisterUserPage.routeLocation;
-      final isHomePage = state.location == HomePage.routeLocation;
+          state.matchedLocation == ForgottenPasswordPage.routeLocation;
+      final isSignup = state.matchedLocation == RegisterUserPage.routeLocation;
+      final isHomePage = state.matchedLocation == HomePage.routeLocation;
       if (isSplash) {
         return null;
       } else if (isAuth && isLoggingIn) {

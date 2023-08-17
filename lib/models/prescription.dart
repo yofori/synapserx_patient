@@ -16,6 +16,7 @@ class Prescription {
   String? prescriberID;
   String? prescriberMDCRegNo;
   String? prescriberName;
+  String? prescriberSignature;
   String? prescriberInstitution;
   String? prescriberInstitutionName;
   String? prescriberInstitutionAddress;
@@ -41,6 +42,7 @@ class Prescription {
       this.prescriberID,
       this.prescriberMDCRegNo,
       this.prescriberName,
+      this.prescriberSignature,
       this.prescriberInstitution,
       this.prescriberInstitutionName,
       this.prescriberInstitutionAddress,

@@ -1,7 +1,8 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
-
+import '../services/pdf_prescription_api.dart' as pdfgen;
 import '../models/prescription.dart';
+import '../services/pdf_api.dart';
 
 class DisplayRxPage extends StatefulWidget {
   const DisplayRxPage({super.key, required this.prescription});
@@ -23,7 +24,15 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
     return Scaffold(
         appBar: AppBar(
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.share))
+            IconButton(
+                onPressed: () async {
+                  final pdfFile = await pdfgen.PdfPrescriptionApi.generate(
+                      widget.prescription);
+                  // ignore: use_build_context_synchronously
+                  PdfApi.sharePDF(context, pdfFile, 'Your Prescription');
+                  //PdfApi.openFile(pdfFile);
+                },
+                icon: const Icon(Icons.share))
           ],
         ),
         body: Padding(
@@ -60,7 +69,12 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
                     children: [
                       Row(
                         children: [
-                          const SizedBox(width: 100, child: Text('Name:')),
+                          const SizedBox(
+                              width: 100,
+                              child: Text(
+                                'Name:',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
                           SizedBox(
                               child: Text(
                                   '${widget.prescription.pxFirstname} ${widget.prescription.pxSurname}')),
@@ -70,7 +84,12 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
                         height: 10,
                       ),
                       Row(children: [
-                        const SizedBox(width: 100, child: Text('Age/Gender:')),
+                        const SizedBox(
+                            width: 100,
+                            child: Text(
+                              'Age/Gender:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )),
                         SizedBox(
                             child: Text(
                                 '${widget.prescription.pxAge}yrs / ${widget.prescription.pxgender}')),
