@@ -4,15 +4,16 @@ import 'package:go_router/go_router.dart';
 import 'package:synapserx_patient/pages/createprofile.dart';
 import 'package:synapserx_patient/pages/myqrcodepage.dart';
 import 'package:synapserx_patient/pages/registeruser.dart';
+import '../pages/displayprescription.dart';
 import '../pages/forgotpassword.dart';
 import '../pages/insurancepage.dart';
 import '../pages/landing.dart';
 import '../pages/loginpage.dart';
 import '../pages/myprescriberspage.dart';
+import '../pages/myprescriptionspage.dart';
 import '../pages/personalinformation.dart';
 import '../pages/splash.dart';
 import '../widgets/homepage.dart';
-import '../widgets/myprescriptions.dart';
 import '../widgets/myprofile.dart';
 import 'auth_provider.dart';
 
@@ -42,7 +43,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: InsurancePage.routeLocation,
         name: InsurancePage.routeName,
         builder: (context, state) {
-          return InsurancePage();
+          return const InsurancePage();
         },
       ),
       GoRoute(
@@ -109,7 +110,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: '/prescriptions',
                     pageBuilder: (context, state) => const NoTransitionPage(
-                      child: MyPrescriptionsWidget(),
+                      child: MyPrescriptionsPage(),
                     ),
                   )
                 ]),

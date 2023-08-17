@@ -11,7 +11,7 @@ class MyPrescribers extends ConsumerWidget {
     return prescribersList.when(
         data: (prescribers) => RefreshIndicator(
               onRefresh: () async {
-                ref.refresh(prescribersProvider);
+                ref.invalidate(prescribersProvider);
               },
               child: prescribers.isNotEmpty
                   ? ListView(

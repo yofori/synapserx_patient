@@ -38,7 +38,7 @@ class _InsurancePageState extends ConsumerState<InsurancePage> {
               addEditInsurancePolicy();
             }),
         appBar: AppBar(
-          title: const Text('Insurance Policies'),
+          title: const Text('My Insurance Policies'),
         ),
         body: insurancePolicyList.when(
             data: (policylists) => (policylists.isNotEmpty)
@@ -46,53 +46,61 @@ class _InsurancePageState extends ConsumerState<InsurancePage> {
                     itemCount: policylists.length,
                     itemBuilder: (context, index) {
                       return Card(
+                          color: const Color.fromARGB(255, 233, 231, 236),
                           child: ListTile(
-                        title: Text(
-                            policylists[index].insuranceCompanyName.toString()),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  isEditing = true;
-                                  insuranceCompanyNameController.text =
-                                      policylists[index].insuranceCompanyName ??
-                                          '';
-                                  policyStartDateController.text =
-                                      policylists[index].startDate ?? '';
-                                  benefitPackageNameController.text =
-                                      policylists[index].benefitPackageName ??
-                                          '';
-                                  benefitPackageCodeController.text =
-                                      policylists[index].benefitPackageCode ??
-                                          '';
-                                  policyNumberController.text =
-                                      policylists[index].policyNo ?? '';
-                                  policyExpiryDateController.text =
-                                      policylists[index].expiryDate ?? '';
-                                  idController.text = policylists[index].id;
-                                  addEditInsurancePolicy();
-                                },
-                                icon: const Icon(Icons.edit)),
-                            IconButton(
-                                onPressed: () async {
-                                  print(policylists[index].id);
-                                  var delete = await _showDeletePolicyDialog(
-                                      policylists[index]
-                                          .insuranceCompanyName
-                                          .toString());
-                                  if (delete == true) {
-                                    ref
-                                        .read(
-                                            insurancePoliciesProvider.notifier)
-                                        .deleteInsurancePolicy(
-                                            policylists[index].id);
-                                  }
-                                },
-                                icon: const Icon(Icons.delete)),
-                          ],
-                        ),
-                      ));
+                            title: Text(policylists[index]
+                                .insuranceCompanyName
+                                .toString()),
+                            subtitle: Text(
+                                'Policy No: ${policylists[index].policyNo} \nBenefit Package: ${policylists[index].benefitPackageName}\nExpiry date: ${policylists[index].expiryDate}'),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      isEditing = true;
+                                      insuranceCompanyNameController.text =
+                                          policylists[index]
+                                                  .insuranceCompanyName ??
+                                              '';
+                                      policyStartDateController.text =
+                                          policylists[index].startDate ?? '';
+                                      benefitPackageNameController.text =
+                                          policylists[index]
+                                                  .benefitPackageName ??
+                                              '';
+                                      benefitPackageCodeController.text =
+                                          policylists[index]
+                                                  .benefitPackageCode ??
+                                              '';
+                                      policyNumberController.text =
+                                          policylists[index].policyNo ?? '';
+                                      policyExpiryDateController.text =
+                                          policylists[index].expiryDate ?? '';
+                                      idController.text = policylists[index].id;
+                                      addEditInsurancePolicy();
+                                    },
+                                    icon: const Icon(Icons.edit)),
+                                IconButton(
+                                    onPressed: () async {
+                                      print(policylists[index].id);
+                                      var delete =
+                                          await _showDeletePolicyDialog(
+                                              policylists[index]
+                                                  .insuranceCompanyName
+                                                  .toString());
+                                      if (delete == true) {
+                                        ref
+                                            .read(insurancePoliciesProvider
+                                                .notifier)
+                                            .deleteInsurancePolicy(
+                                                policylists[index].id);
+                                      }
+                                    },
+                                    icon: const Icon(Icons.delete)),
+                              ],
+                            ),
+                          ));
                     })
                 : const Padding(
                     padding: EdgeInsets.all(15.0),
