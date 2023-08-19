@@ -29,6 +29,7 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
       body: widget.navigationShell,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -36,7 +37,11 @@ class _LandingPageState extends State<LandingPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.medical_services),
-            label: 'My Prescriptions',
+            label: 'Prescriptions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.science),
+            label: 'Investigations',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

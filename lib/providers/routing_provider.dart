@@ -8,6 +8,7 @@ import '../pages/forgotpassword.dart';
 import '../pages/insurancepage.dart';
 import '../pages/landing.dart';
 import '../pages/loginpage.dart';
+import '../pages/myinvestigationspage.dart';
 import '../pages/myprescriberspage.dart';
 import '../pages/myprescriptionspage.dart';
 import '../pages/personalinformation.dart';
@@ -110,6 +111,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: '/prescriptions',
                     pageBuilder: (context, state) => const NoTransitionPage(
                       child: MyPrescriptionsPage(),
+                    ),
+                  )
+                ]),
+            StatefulShellBranch(
+                //navigatorKey: _shellNavigatorPrescriptionsKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: '/investigations',
+                    pageBuilder: (context, state) => const NoTransitionPage(
+                      child: MyInvestigationsPage(),
                     ),
                   )
                 ]),

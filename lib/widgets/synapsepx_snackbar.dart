@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:synapserx_patient/main.dart';
 
 class GlobalSnackBar {
   final String message;
@@ -10,13 +11,14 @@ class GlobalSnackBar {
     required this.message,
   });
 
+  static final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
   static show(
-    BuildContext context,
     String message,
     Color color,
     bool showActionButton,
   ) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    scaffoldKey.currentState?.showSnackBar(
       SnackBar(
         elevation: 0.0,
         content: Text(message),
@@ -24,7 +26,7 @@ class GlobalSnackBar {
         backgroundColor: color,
         action: showActionButton
             ? SnackBarAction(
-                textColor: Color(0xFFFAF2FB),
+                textColor: const Color(0xFFFAF2FB),
                 label: 'OK',
                 onPressed: () {},
               )

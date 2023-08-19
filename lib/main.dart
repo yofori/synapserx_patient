@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:synapserx_patient/widgets/synapsepx_snackbar.dart';
 import 'firebase_options.dart';
 import 'providers/routing_provider.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
@@ -30,6 +31,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     return MaterialApp.router(
+      scaffoldMessengerKey: GlobalSnackBar.scaffoldKey,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
       routeInformationProvider: router.routeInformationProvider,

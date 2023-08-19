@@ -1,9 +1,10 @@
 import 'dart:developer';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:synapserx_patient/models/associations.dart';
 import 'package:synapserx_patient/models/insurancepolicy.dart';
+import 'package:synapserx_patient/widgets/synapsepx_snackbar.dart';
 import '../models/prescription.dart';
 import '../models/userprofile.dart';
 import 'dio_tokens.dart';
@@ -151,6 +152,27 @@ class DioClient {
     } on DioException catch (err) {
       final errorMessage = (err).toString();
       throw errorMessage;
+    }
+  }
+
+  Future<dynamic> addAssociation({required String prescriberid}) async {
+    try {
+      Response response = await _dio.post(
+        '/user/addprescriber',
+        data: {
+          'prescriberuid': prescriberid,
+          'patientFullname': GlobalData.fullname
+        },
+      );
+      if (response.statusCode == 201) {
+        GlobalSnackBar.show(
+            'The prescriber has been successfully added', Colors.green, false);
+        return response.data;
+      }
+    } on DioException catch (err) {
+      log(err.response.toString());
+      GlobalSnackBar.show(err.response?.data['error'], Colors.red, false);
+      return null;
     }
   }
 }

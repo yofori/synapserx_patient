@@ -16,4 +16,14 @@ class Prescribers extends _$Prescribers {
   FutureOr<List<Associations>> build() async {
     return _getPrescribers();
   }
+
+  Future<void> addPrescriber(prescriberuid) async {
+    // Set the state to loading
+    state = const AsyncValue.loading();
+    // Add the new todo and reload the todo list from the remote repository
+    state = await AsyncValue.guard(() async {
+      await DioClient().addAssociation(prescriberid: prescriberuid);
+      return _getPrescribers();
+    });
+  }
 }

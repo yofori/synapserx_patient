@@ -35,23 +35,18 @@ class AuthService {
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           GlobalSnackBar.show(
-              context,
               'The account already exists with a different credential.',
               Colors.red,
               false);
         } else if (e.code == 'invalid-credential') {
           GlobalSnackBar.show(
-              context,
               'Error occurred while accessing credentials. Try again.',
               Colors.red,
               false);
         }
       } catch (e) {
-        GlobalSnackBar.show(
-            context,
-            'Error occurred using Google Sign-In. Try again.',
-            Colors.red,
-            false);
+        GlobalSnackBar.show('Error occurred using Google Sign-In. Try again.',
+            Colors.red, false);
       }
     }
 
@@ -87,15 +82,15 @@ class AuthService {
       // On error
       // If user is not found
       if (e.code == 'user-not-found') {
-        GlobalSnackBar.show(context, 'No user found for the email provided.',
-            Colors.red, false);
+        GlobalSnackBar.show(
+            'No user found for the email provided.', Colors.red, false);
       }
       // If password is wrong
       else if (e.code == 'wrong-password') {
-        GlobalSnackBar.show(context, 'Authentication failed: Wrong password.',
-            Colors.red, false);
+        GlobalSnackBar.show(
+            'Authentication failed: Wrong password.', Colors.red, false);
       } else {
-        GlobalSnackBar.show(context, e.message.toString(), Colors.red, false);
+        GlobalSnackBar.show(e.message.toString(), Colors.red, false);
       }
     }
     return user;

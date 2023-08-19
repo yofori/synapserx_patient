@@ -339,8 +339,8 @@ class _RegisterUserState extends State<RegisterUserPage> {
                         .createProfileInfo(data: params)
                         .then((value) {
                       if (value) {
-                        GlobalSnackBar.show(context, 'User Profile  created',
-                            Colors.green, false);
+                        GlobalSnackBar.show(
+                            'User Profile  created', Colors.green, false);
                       }
                     });
                   } on FirebaseAuthException catch (e) {

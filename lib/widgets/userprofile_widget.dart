@@ -50,6 +50,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
   @override
   Widget build(BuildContext context) {
     final profileProvider = ref.watch(asyncUserProfileProvider);
+    final notifier = ref.watch(asyncUserProfileProvider.notifier);
     return Scaffold(
         appBar: AppBar(
           leading: widget.isCreating
@@ -233,10 +234,8 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                               Checkbox(
                                   value: isAgeEstimated,
                                   onChanged: (bool? value) {
-                                    setState(() {
-                                      isAgeEstimated = value!;
-                                    });
-
+                                    notifier.setIsAgeEastimated(!value!);
+                                    isAgeEstimated = value;
                                     enableSaveButton();
                                   }),
                               const Text('Age is estimated'),
