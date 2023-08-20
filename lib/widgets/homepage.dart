@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:synapserx_patient/services/auth_services.dart';
+import 'package:synapserx_patient/widgets/offlineindicator.dart';
 import 'package:synapserx_patient/widgets/synapsepxdrawer.dart';
+import '../providers/network_connectivity_provider.dart';
 import '../services/dio_client.dart';
 import '../services/settings.dart';
 
 final DioClient _dioClient = DioClient();
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   static String get routeName => 'home';
   static String get routeLocation => '/$routeName';
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -44,6 +48,9 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              (connectivityStatusProvider == ConnectivityStatus.isConnected)
+                  ? Container()
+                  : const OfflineIndicator(),
               Container(
                   margin: const EdgeInsets.all(20),
                   padding: const EdgeInsets.all(8),
@@ -110,7 +117,17 @@ class _HomePageState extends State<HomePage> {
                               .getProfile()
                               .then((value) => {print(value)});
                         },
-                        child: const Text('Get Profile'))
+                        child: const Text('Get Profile')),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (connectivityStatusProvider ==
+                              ConnectivityStatus.isConnected) {
+                            print('you are connected');
+                          } else {
+                            print('you are disconnected');
+                          }
+                        },
+                        child: const Text('Get Connectivity Status'))
                   ]),
             ],
           ),
