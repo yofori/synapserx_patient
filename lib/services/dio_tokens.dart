@@ -6,8 +6,19 @@ class Tokens extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    options.headers['Authorization'] =
-        'Bearer ${await AuthService().getFirebaseIdToken()}';
-    return handler.next(options);
+    try {
+      options.headers['Authorization'] =
+          'Bearer ${await AuthService().getFirebaseIdToken()}';
+      return handler.next(options);
+    } on DioException catch (e) {
+      handler.reject(e);
+    } catch (e) {
+      handler.reject(
+        DioException(
+            requestOptions: options,
+            type: DioExceptionType.connectionError,
+            error: e),
+      );
+    }
   }
 }

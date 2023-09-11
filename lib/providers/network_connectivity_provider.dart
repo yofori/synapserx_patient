@@ -67,6 +67,11 @@ class ConnectivityStatusNotifier extends StateNotifier<ConnectivityStatus> {
       }
     });
   }
+  Future<bool> hasConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi;
+  }
 }
 
 final connectivityStatusProviders = StateNotifierProvider((ref) {

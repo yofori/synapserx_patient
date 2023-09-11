@@ -7,6 +7,7 @@ import 'package:synapserx_patient/widgets/synapsepxdrawer.dart';
 import '../providers/network_connectivity_provider.dart';
 import '../services/dio_client.dart';
 import '../services/settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final DioClient _dioClient = DioClient();
 
@@ -22,7 +23,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    checkIfProfileIsCreated();
+    //checkIfProfileIsCreated();
   }
 
   @override
@@ -80,7 +81,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                       //   final fullname = ref.watch(setFullnameProvider);
                       //   return Text(fullname);
                       // }),
-                      Text(GlobalData.fullname),
+                      //Text(GlobalData.fullname),
+                      Text(FirebaseAuth.instance.currentUser!.displayName
+                          .toString()),
                     ]),
                   ])),
               Column(
@@ -120,12 +123,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                         child: const Text('Get Profile')),
                     ElevatedButton(
                         onPressed: () {
-                          if (connectivityStatusProvider ==
-                              ConnectivityStatus.isConnected) {
-                            print('you are connected');
-                          } else {
-                            print('you are disconnected');
-                          }
+                          // if (connectivityStatusProvider ==
+                          //     ConnectivityStatus.isConnected) {
+                          //   print('you are connected');
+                          // } else {
+                          //   print('you are disconnected');
+                          // }
+                          ConnectivityStatusNotifier().hasConnection();
+                          ref.read(connectivityStatusProviders.notifier).state =
+                              ConnectivityStatus.isDisonnected;
                         },
                         child: const Text('Get Connectivity Status'))
                   ]),

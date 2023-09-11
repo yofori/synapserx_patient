@@ -16,4 +16,9 @@ class Prescriptions extends _$Prescriptions {
   FutureOr<List<Prescription>> build() async {
     return _getPrescriptions();
   }
+
+  Future<void> refreshPrescription() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(_getPrescriptions);
+  }
 }

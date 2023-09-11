@@ -15,8 +15,8 @@ class DioClient {
       : _dio = Dio(
           BaseOptions(
             baseUrl: "${GlobalData.baseUrl}/api",
-            connectTimeout: const Duration(seconds: 50),
-            receiveTimeout: const Duration(seconds: 30),
+            connectTimeout: const Duration(seconds: 10),
+            receiveTimeout: const Duration(seconds: 10),
           ),
         )..interceptors.addAll([
             Tokens(),
@@ -88,7 +88,8 @@ class DioClient {
             .toList();
       }
     } on DioException catch (err) {
-      debugPrint(err.message);
+      final errorMessage = (err).toString();
+      throw errorMessage;
     }
     return [];
   }
@@ -102,7 +103,9 @@ class DioClient {
             .toList();
       }
     } on DioException catch (err) {
-      debugPrint(err.message);
+      final errorMessage = (err).toString();
+      log(errorMessage);
+      throw errorMessage;
     }
     return [];
   }

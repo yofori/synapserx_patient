@@ -35,7 +35,7 @@ class MyApp extends ConsumerWidget {
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
       routeInformationProvider: router.routeInformationProvider,
-      title: 'synapsePX',
+      title: 'synapsePx',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),

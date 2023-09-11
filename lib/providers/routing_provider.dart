@@ -129,7 +129,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                 routes: <RouteBase>[
                   GoRoute(
                     path: '/profile',
-                    pageBuilder: (context, state) => const NoTransitionPage(
+                    pageBuilder: (context, state) =>
+                        const CustomNoTransitionPage(
                       child: MyProfileWidget(),
                     ),
                   )
@@ -160,3 +161,28 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
   );
 });
+
+/// Custom transition page with no transition.
+class CustomNoTransitionPage<T> extends CustomTransitionPage<T> {
+  /// Constructor for a page with no transition functionality.
+  const CustomNoTransitionPage({
+    required super.child,
+    super.name,
+    super.arguments,
+    super.restorationId,
+    super.key,
+  }) : super(
+          transitionsBuilder: _transitionsBuilder,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+          maintainState: false,
+        );
+
+  static Widget _transitionsBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) =>
+      child;
+}
