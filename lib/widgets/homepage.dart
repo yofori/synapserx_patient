@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,7 +25,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    //checkIfProfileIsCreated();
+    checkInternetConnection();
   }
 
   @override
@@ -77,11 +79,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                       const SizedBox(
                         height: 5,
                       ),
-                      // Consumer(builder: (context, ref, child) {
-                      //   final fullname = ref.watch(setFullnameProvider);
-                      //   return Text(fullname);
-                      // }),
-                      //Text(GlobalData.fullname),
                       Text(FirebaseAuth.instance.currentUser!.displayName
                           .toString()),
                     ]),
@@ -123,15 +120,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         child: const Text('Get Profile')),
                     ElevatedButton(
                         onPressed: () {
-                          // if (connectivityStatusProvider ==
-                          //     ConnectivityStatus.isConnected) {
-                          //   print('you are connected');
-                          // } else {
-                          //   print('you are disconnected');
-                          // }
-                          ConnectivityStatusNotifier().hasConnection();
-                          ref.read(connectivityStatusProviders.notifier).state =
-                              ConnectivityStatus.isDisonnected;
+                          checkInternetConnection();
                         },
                         child: const Text('Get Connectivity Status'))
                   ]),
@@ -153,6 +142,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         context.go('/createprofile');
       }
     }
+  }
+
+  void checkInternetConnection() async {
+    log('checking......');
+    await ref.read(connectivityStatusProviders.notifier).hasConnection();
   }
 }
 

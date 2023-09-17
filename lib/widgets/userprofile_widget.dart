@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +11,7 @@ import '../providers/data_providers.dart';
 import '../services/auth_services.dart';
 import '../services/settings.dart';
 import '../widgets/genderselector.dart';
+import 'alert_msg_widget.dart';
 
 class UserProfileWidget extends ConsumerStatefulWidget {
   const UserProfileWidget({
@@ -31,6 +35,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
   final _nhisNoTextController = TextEditingController();
   final pxDOBController = TextEditingController();
   final pxAgeController = TextEditingController();
+  final countryCodeController = TextEditingController();
   final List<Gender> genders = <Gender>[
     Gender("Male", Icons.male, false),
     Gender("Female", Icons.female, false),
@@ -70,38 +75,42 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                 return value
                     ? TextButton(
                         onPressed: () async {
-                          generateParams();
-                          if (!widget.isCreating) {
-                            await ref
-                                .watch(dioClientProvider)
-                                .updateProfileInfo(data: params)
-                                .then((updateOutcome) {
-                              if (updateOutcome) {
-                                ref
-                                    .watch(isSaveButtonEnabledProvider.notifier)
-                                    .saveEnabled(false);
-                                ref.invalidate(asyncUserProfileProvider);
-                                const GlobalSnackBar(Colors.green,
-                                    message:
-                                        'Your user profile has been updated');
-                              }
-                            });
-                          } else {
-                            await ref
-                                .watch(dioClientProvider)
-                                .createProfileInfo(data: params)
-                                .then((updateOutcome) {
-                              if (updateOutcome) {
-                                ref
-                                    .watch(isSaveButtonEnabledProvider.notifier)
-                                    .saveEnabled(false);
-                                ref.invalidate(asyncUserProfileProvider);
-                                const GlobalSnackBar(Colors.green,
-                                    message:
-                                        'Your user profile has been created');
-                                context.go('/home');
-                              }
-                            });
+                          if (_formKey.currentState!.validate()) {
+                            generateParams();
+                            if (!widget.isCreating) {
+                              await ref
+                                  .watch(dioClientProvider)
+                                  .updateProfileInfo(data: params)
+                                  .then((updateOutcome) {
+                                if (updateOutcome) {
+                                  ref
+                                      .watch(
+                                          isSaveButtonEnabledProvider.notifier)
+                                      .saveEnabled(false);
+                                  ref.invalidate(asyncUserProfileProvider);
+                                  const GlobalSnackBar(Colors.green,
+                                      message:
+                                          'Your user profile has been updated');
+                                }
+                              });
+                            } else {
+                              await ref
+                                  .watch(dioClientProvider)
+                                  .createProfileInfo(data: params)
+                                  .then((updateOutcome) {
+                                if (updateOutcome) {
+                                  ref
+                                      .watch(
+                                          isSaveButtonEnabledProvider.notifier)
+                                      .saveEnabled(false);
+                                  ref.invalidate(asyncUserProfileProvider);
+                                  const GlobalSnackBar(Colors.green,
+                                      message:
+                                          'Your user profile has been created');
+                                  context.go('/home');
+                                }
+                              });
+                            }
                           }
                         },
                         child: const Text(
@@ -139,6 +148,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
             pxAgeController.text = (profile.ageAtRegistration ?? 0).toString();
             pxDOBController.text = profile.dateOfBirth ?? '';
             isAgeEstimated = profile.isAgeEstimated;
+            countryCodeController.text = profile.countryCode ?? '+233';
             return Padding(
               padding: const EdgeInsets.all(15.0),
               child: SingleChildScrollView(
@@ -177,7 +187,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                                 ),
                               )),
                           const SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           TextFormField(
                               textCapitalization: TextCapitalization.words,
@@ -227,7 +237,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                                 enableSaveButton();
                               }),
                           const SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           Row(
                             children: [
@@ -336,20 +346,45 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                             ),
                           ]),
                           const SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           TextFormField(
                               keyboardType: TextInputType.phone,
                               onChanged: (value) {
                                 enableSaveButton();
                               },
+                              validator: (val) {
+                                if ((val!.isNotEmpty) &&
+                                    !RegExp(r'^(?:[+0])?[0-9]{10,12}$')
+                                        .hasMatch(val)) {
+                                  return "Enter a valid phone number";
+                                } else if (val.isEmpty) {
+                                  return "An cell phone number is required for signup";
+                                }
+                                return null;
+                              },
                               controller: _telephoneTextController,
                               decoration: InputDecoration(
+                                prefixIcon: CountryCodePicker(
+                                  onChanged: (value) {
+                                    countryCodeController.text =
+                                        value.dialCode.toString();
+                                    enableSaveButton();
+                                  },
+                                  initialSelection: countryCodeController.text,
+                                  favorite: const [
+                                    'NG',
+                                    'GB',
+                                    'US',
+                                    '+27',
+                                    'GH'
+                                  ],
+                                ),
                                 filled: true,
                                 fillColor: Colors.grey[200],
                                 labelText: 'Telephone',
                                 hintText: 'Telephone',
-                                prefixIcon: const Icon(Icons.phone),
+                                //prefixIcon: const Icon(Icons.phone),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15.0),
                                   borderSide: BorderSide(
@@ -366,12 +401,22 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                                 ),
                               )),
                           const SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           TextFormField(
                               keyboardType: TextInputType.emailAddress,
                               onChanged: (value) {
                                 enableSaveButton();
+                              },
+                              validator: (val) {
+                                if ((val!.isNotEmpty) &&
+                                    !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                                        .hasMatch(val)) {
+                                  return "Enter a valid email address";
+                                } else if (val.isEmpty) {
+                                  return "An email address is required for signup";
+                                }
+                                return null;
                               },
                               controller: _emailTextController,
                               decoration: InputDecoration(
@@ -396,7 +441,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                                 ),
                               )),
                           const SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           TextFormField(
                               onChanged: (value) {
@@ -425,7 +470,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
                                 ),
                               )),
                           const SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           TextFormField(
                               onChanged: (value) {
@@ -458,7 +503,17 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
             );
           },
           error: (err, stack) => Center(
-            child: Text("Error: $err", style: const TextStyle(fontSize: 15)),
+            child: AlertMSGWidget(
+              showActionButton: true,
+              imageLocation: 'assets/images/error_graphic.png',
+              subtitle: err.toString(),
+              title: 'Unable to retrieve your information',
+              action: () {
+                log('Refreshing ');
+                ref.read(asyncUserProfileProvider.notifier).refreshProfile();
+              },
+              actionButtonText: 'Retry',
+            ),
           ),
           loading: (() => const Center(child: CircularProgressIndicator())),
         ));
@@ -480,6 +535,7 @@ class _UserProfileWidgetState extends ConsumerState<UserProfileWidget> {
       "gender": selectedGender.toLowerCase(),
       "nationalIdNo": _niaNoTextController.text.trim(),
       "nationalHealthInsurancedNo": _nhisNoTextController.text.trim(),
+      "countryCode": countryCodeController.text,
     };
     if (widget.isCreating) {
       final status = <String, bool>{"active": true};

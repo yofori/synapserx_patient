@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 
 import '../providers/insurancepolicies_provider.dart';
+import '../providers/network_connectivity_provider.dart';
+import '../widgets/alert_msg_widget.dart';
 
 class InsurancePage extends ConsumerStatefulWidget {
   const InsurancePage({super.key});
@@ -30,13 +33,17 @@ class _InsurancePageState extends ConsumerState<InsurancePage> {
   @override
   Widget build(BuildContext context) {
     final insurancePolicyList = ref.watch(insurancePoliciesProvider);
+    var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              isEditing = false;
-              addEditInsurancePolicy();
-            }),
+        floatingActionButton:
+            (connectivityStatusProvider == ConnectivityStatus.isConnected)
+                ? FloatingActionButton(
+                    child: const Icon(Icons.add),
+                    onPressed: () {
+                      isEditing = false;
+                      addEditInsurancePolicy();
+                    })
+                : null,
         appBar: AppBar(
           title: const Text('My Insurance Policies'),
         ),
@@ -111,7 +118,20 @@ class _InsurancePageState extends ConsumerState<InsurancePage> {
                       ),
                     ),
                   ),
-            error: (err, stack) => Text('Error: $err'),
+            error: (err, stack) => Center(
+                  child: AlertMSGWidget(
+                    showActionButton: true,
+                    imageLocation: 'assets/images/error_graphic.png',
+                    subtitle: err.toString(),
+                    title: 'Unable to retrieve your policies',
+                    action: () {
+                      ref
+                          .read(insurancePoliciesProvider.notifier)
+                          .refreshInsurancePolicy();
+                    },
+                    actionButtonText: 'Retry',
+                  ),
+                ),
             loading: () => const Center(
                   child: CircularProgressIndicator(),
                 )));
@@ -349,7 +369,6 @@ class _InsurancePageState extends ConsumerState<InsurancePage> {
                                 };
                                 params.addEntries(status.entries);
                               }
-                              print(params);
                               isEditing
                                   ? ref
                                       .read(insurancePoliciesProvider.notifier)

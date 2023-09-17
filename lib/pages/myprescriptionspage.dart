@@ -16,6 +16,7 @@ class MyPrescriptionsPage extends ConsumerWidget {
     var connectivityStatusProvider = ref.watch(connectivityStatusProviders);
     return Scaffold(
       appBar: AppBar(
+        title: const Text('My Prescriptions'),
         actions: [
           IconButton(
               onPressed: () async {

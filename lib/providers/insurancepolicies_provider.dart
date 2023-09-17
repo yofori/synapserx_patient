@@ -46,4 +46,13 @@ class InsurancePolicies extends _$InsurancePolicies {
       return _getInsurancePolicies();
     });
   }
+
+  Future<void> refreshInsurancePolicy() async {
+    // Set the state to loading
+    state = const AsyncValue.loading();
+    // Add the new todo and reload the todo list from the remote repository
+    state = await AsyncValue.guard(() async {
+      return _getInsurancePolicies();
+    });
+  }
 }

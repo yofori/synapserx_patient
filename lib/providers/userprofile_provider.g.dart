@@ -6,7 +6,7 @@ part of 'userprofile_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$asyncUserProfileHash() => r'6a590f5c6b59e402b4e2e8cba55b9e362a2a9fef';
+String _$asyncUserProfileHash() => r'16136af23b7041f32bcb134a2f6e3c3e0756143b';
 
 /// See also [AsyncUserProfile].
 @ProviderFor(AsyncUserProfile)
@@ -39,20 +39,5 @@ final isSaveButtonEnabledProvider =
 );
 
 typedef _$IsSaveButtonEnabled = AutoDisposeNotifier<bool>;
-String _$setFullnameHash() => r'5e22938eef752c39fb0d4ab39b9ec09f72e32d3a';
-
-/// See also [SetFullname].
-@ProviderFor(SetFullname)
-final setFullnameProvider =
-    AutoDisposeNotifierProvider<SetFullname, String>.internal(
-  SetFullname.new,
-  name: r'setFullnameProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$setFullnameHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SetFullname = AutoDisposeNotifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

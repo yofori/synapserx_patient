@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:synapserx_patient/pages/displayprescription.dart';
 
-import '../providers/prescriptions_provider.dart';
+import '../providers/labrequests_provider.dart';
 import 'alert_msg_widget.dart';
 
-class MyPrescriptionsWidget extends ConsumerStatefulWidget {
-  const MyPrescriptionsWidget({super.key});
+class MyLabsWidget extends ConsumerStatefulWidget {
+  const MyLabsWidget({super.key});
   @override
-  ConsumerState<MyPrescriptionsWidget> createState() =>
-      _MyPrescriptionsWidgetState();
+  ConsumerState<MyLabsWidget> createState() => _MyLabsWidgetState();
 }
 
-class _MyPrescriptionsWidgetState extends ConsumerState<MyPrescriptionsWidget> {
+class _MyLabsWidgetState extends ConsumerState<MyLabsWidget> {
   @override
   void initState() {
     super.initState();
@@ -21,20 +19,20 @@ class _MyPrescriptionsWidgetState extends ConsumerState<MyPrescriptionsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final prescriptionsList = ref.watch(prescriptionsProvider);
-    return prescriptionsList.when(
-        data: (prescriptions) => prescriptions.isNotEmpty
+    final labList = ref.watch(labRequestsProvider);
+    return labList.when(
+        data: (labinvestigations) => labinvestigations.isNotEmpty
             ? ListView.builder(
-                itemCount: prescriptions.length,
+                itemCount: labinvestigations.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DisplayRxPage(
-                                    prescription: prescriptions[index],
-                                  )));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => DisplayRxPage(
+                      //               prescription: labinvestigations[index],
+                      //             )));
                     },
                     leading: Container(
                       width: 40,
@@ -50,15 +48,15 @@ class _MyPrescriptionsWidgetState extends ConsumerState<MyPrescriptionsWidget> {
                       )),
                     ),
                     title: Text(
-                        'Date: ${DateFormat('dd-MM-yyyy @ hh:mm a').format(DateTime.parse(prescriptions[index].createdAt.toString()))}'),
+                        'Date: ${DateFormat('dd-MM-yyyy @ hh:mm a').format(DateTime.parse(labinvestigations[index].createdAt.toString()))}'),
                     subtitle: Text(
-                        'Prescriber: ${prescriptions[index].prescriberName}'),
+                        'Prescriber: ${labinvestigations[index].prescriberName}'),
                   );
                 },
               )
             : const Center(
                 child: Text(
-                  'You do not have any prescriptions yet.',
+                  'You do not have any labinvestigations yet.',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -67,11 +65,11 @@ class _MyPrescriptionsWidgetState extends ConsumerState<MyPrescriptionsWidget> {
                 showActionButton: true,
                 imageLocation: 'assets/images/error_graphic.png',
                 subtitle: err.toString(),
-                title: 'Unable to retrieve your prescriptions',
+                title: 'Unable to retrieve your lab investigation',
                 action: () {
                   ref
-                      .read(prescriptionsProvider.notifier)
-                      .refreshPrescription();
+                      .read(labRequestsProvider.notifier)
+                      .refreshLabinvestigations();
                 },
                 actionButtonText: 'Retry',
               ),

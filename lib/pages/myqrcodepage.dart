@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:synapserx_patient/providers/userprofile_provider.dart';
 
+import '../widgets/alert_msg_widget.dart';
+
 class QRPage extends ConsumerWidget {
   const QRPage({super.key});
 
@@ -43,8 +45,18 @@ class QRPage extends ConsumerWidget {
               ),
             );
           },
-          error: (err, stack) => Text("Error: $err",
-              style: const TextStyle(color: Colors.white, fontSize: 15)),
+          error: (err, stack) => Center(
+            child: AlertMSGWidget(
+              showActionButton: true,
+              imageLocation: 'assets/images/error_graphic.png',
+              subtitle: err.toString(),
+              title: 'Unable to retrieve your QR Code',
+              action: () {
+                ref.read(asyncUserProfileProvider.notifier).refreshProfile();
+              },
+              actionButtonText: 'Retry',
+            ),
+          ),
           loading: (() => const Center(child: CircularProgressIndicator())),
         ));
   }

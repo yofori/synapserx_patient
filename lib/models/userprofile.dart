@@ -15,6 +15,7 @@ class UserProfile with _$UserProfile {
       @Default(true) bool isAgeEstimated,
       String? gender,
       String? telephone,
+      String? countryCode,
       String? email,
       String? nationalIdNo,
       String? nationalHealthInsurancedNo,

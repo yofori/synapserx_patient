@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -37,7 +38,7 @@ class ConnectivityStatusNotifier extends StateNotifier<ConnectivityStatus> {
                 newState = ConnectivityStatus.isConnected;
                 await Fluttertoast.showToast(
                     toastLength: Toast.LENGTH_SHORT,
-                    msg: 'You are back onine',
+                    msg: 'connected to synapseRx',
                     backgroundColor: Colors.green);
               } else {
                 newState = ConnectivityStatus.isDisonnected;
@@ -69,6 +70,14 @@ class ConnectivityStatusNotifier extends StateNotifier<ConnectivityStatus> {
   }
   Future<bool> hasConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      state = ConnectivityStatus.isConnected;
+      log('there is connectivity');
+    } else {
+      state = ConnectivityStatus.isDisonnected;
+      log('there is no connectivity');
+    }
     return connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi;
   }

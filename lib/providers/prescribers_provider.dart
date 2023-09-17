@@ -26,4 +26,13 @@ class Prescribers extends _$Prescribers {
       return _getPrescribers();
     });
   }
+
+  Future<void> refreshPrescriber() async {
+    // Set the state to loading
+    state = const AsyncValue.loading();
+    // Add the new todo and reload the todo list from the remote repository
+    state = await AsyncValue.guard(() async {
+      return _getPrescribers();
+    });
+  }
 }

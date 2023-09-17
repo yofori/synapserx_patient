@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:synapserx_patient/providers/prescribers_provider.dart';
 
+import 'alert_msg_widget.dart';
+
 class MyPrescribers extends ConsumerWidget {
   const MyPrescribers({super.key});
 
@@ -32,7 +34,18 @@ class MyPrescribers extends ConsumerWidget {
                       ),
                     ),
             ),
-        error: (err, stack) => Text('Error: $err'),
+        error: (err, stack) => Center(
+              child: AlertMSGWidget(
+                showActionButton: true,
+                imageLocation: 'assets/images/error_graphic.png',
+                subtitle: err.toString(),
+                title: 'Unable to retrieve your policies',
+                action: () {
+                  ref.refresh(prescribersProvider.notifier).refreshPrescriber();
+                },
+                actionButtonText: 'Retry',
+              ),
+            ),
         loading: () => const Center(
               child: CircularProgressIndicator(),
             ));

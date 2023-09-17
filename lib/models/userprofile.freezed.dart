@@ -30,6 +30,7 @@ mixin _$UserProfile {
   bool get isAgeEstimated => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
   String? get telephone => throw _privateConstructorUsedError;
+  String? get countryCode => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   String? get nationalIdNo => throw _privateConstructorUsedError;
   String? get nationalHealthInsurancedNo => throw _privateConstructorUsedError;
@@ -59,6 +60,7 @@ abstract class $UserProfileCopyWith<$Res> {
       bool isAgeEstimated,
       String? gender,
       String? telephone,
+      String? countryCode,
       String? email,
       String? nationalIdNo,
       String? nationalHealthInsurancedNo,
@@ -89,6 +91,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? isAgeEstimated = null,
     Object? gender = freezed,
     Object? telephone = freezed,
+    Object? countryCode = freezed,
     Object? email = freezed,
     Object? nationalIdNo = freezed,
     Object? nationalHealthInsurancedNo = freezed,
@@ -136,6 +139,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.telephone
           : telephone // ignore: cast_nullable_to_non_nullable
               as String?,
+      countryCode: freezed == countryCode
+          ? _value.countryCode
+          : countryCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -179,6 +186,7 @@ abstract class _$$_UserProfileCopyWith<$Res>
       bool isAgeEstimated,
       String? gender,
       String? telephone,
+      String? countryCode,
       String? email,
       String? nationalIdNo,
       String? nationalHealthInsurancedNo,
@@ -207,6 +215,7 @@ class __$$_UserProfileCopyWithImpl<$Res>
     Object? isAgeEstimated = null,
     Object? gender = freezed,
     Object? telephone = freezed,
+    Object? countryCode = freezed,
     Object? email = freezed,
     Object? nationalIdNo = freezed,
     Object? nationalHealthInsurancedNo = freezed,
@@ -254,6 +263,10 @@ class __$$_UserProfileCopyWithImpl<$Res>
           ? _value.telephone
           : telephone // ignore: cast_nullable_to_non_nullable
               as String?,
+      countryCode: freezed == countryCode
+          ? _value.countryCode
+          : countryCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -292,6 +305,7 @@ class _$_UserProfile implements _UserProfile {
       this.isAgeEstimated = true,
       this.gender,
       this.telephone,
+      this.countryCode,
       this.email,
       this.nationalIdNo,
       this.nationalHealthInsurancedNo,
@@ -323,6 +337,8 @@ class _$_UserProfile implements _UserProfile {
   @override
   final String? telephone;
   @override
+  final String? countryCode;
+  @override
   final String? email;
   @override
   final String? nationalIdNo;
@@ -336,7 +352,7 @@ class _$_UserProfile implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(fullname: $fullname, firebaseUID: $firebaseUID, surname: $surname, firstname: $firstname, title: $title, dateOfBirth: $dateOfBirth, ageAtRegistration: $ageAtRegistration, isAgeEstimated: $isAgeEstimated, gender: $gender, telephone: $telephone, email: $email, nationalIdNo: $nationalIdNo, nationalHealthInsurancedNo: $nationalHealthInsurancedNo, patientuid: $patientuid, active: $active)';
+    return 'UserProfile(fullname: $fullname, firebaseUID: $firebaseUID, surname: $surname, firstname: $firstname, title: $title, dateOfBirth: $dateOfBirth, ageAtRegistration: $ageAtRegistration, isAgeEstimated: $isAgeEstimated, gender: $gender, telephone: $telephone, countryCode: $countryCode, email: $email, nationalIdNo: $nationalIdNo, nationalHealthInsurancedNo: $nationalHealthInsurancedNo, patientuid: $patientuid, active: $active)';
   }
 
   @override
@@ -361,6 +377,8 @@ class _$_UserProfile implements _UserProfile {
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.telephone, telephone) ||
                 other.telephone == telephone) &&
+            (identical(other.countryCode, countryCode) ||
+                other.countryCode == countryCode) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.nationalIdNo, nationalIdNo) ||
                 other.nationalIdNo == nationalIdNo) &&
@@ -387,6 +405,7 @@ class _$_UserProfile implements _UserProfile {
       isAgeEstimated,
       gender,
       telephone,
+      countryCode,
       email,
       nationalIdNo,
       nationalHealthInsurancedNo,
@@ -419,6 +438,7 @@ abstract class _UserProfile implements UserProfile {
       final bool isAgeEstimated,
       final String? gender,
       final String? telephone,
+      final String? countryCode,
       final String? email,
       final String? nationalIdNo,
       final String? nationalHealthInsurancedNo,
@@ -448,6 +468,8 @@ abstract class _UserProfile implements UserProfile {
   String? get gender;
   @override
   String? get telephone;
+  @override
+  String? get countryCode;
   @override
   String? get email;
   @override

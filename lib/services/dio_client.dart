@@ -4,9 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:synapserx_patient/models/associations.dart';
 import 'package:synapserx_patient/models/insurancepolicy.dart';
+import 'package:synapserx_patient/models/labrequest.dart';
 import 'package:synapserx_patient/widgets/synapsepx_snackbar.dart';
 import '../models/prescription.dart';
 import '../models/userprofile.dart';
+import '../widgets/custom_exception.dart';
 import 'dio_tokens.dart';
 import 'settings.dart';
 
@@ -30,7 +32,6 @@ class DioClient {
       Response response = await _dio.get(
         '/user/test',
       );
-      print(response.data);
       return response.data;
     } on DioException catch (err) {
       final errorMessage = err.message.toString();
@@ -43,25 +44,28 @@ class DioClient {
   Future<UserProfile> getProfile() async {
     try {
       Response response = await _dio.get('/user/getprofile');
-      print(response.data);
       return UserProfile.fromJson(response.data);
     } on DioException catch (err) {
       if (err.response?.data['message'] == 'no-profile-exists') {
-        // do something if the profile is empty here
+        throw CustomException('no-profile-exists');
+      } else if (err.type == DioExceptionType.connectionError) {
+        throw CustomException(
+            'A network error (such as timeout, interrupted connection or unreachable host) has occurred.');
+      } else {
+        throw CustomException(err.error.toString());
       }
     }
-    return UserProfile.initialState;
   }
 
   Future<bool> updateProfileInfo({required data}) async {
     try {
       Response response = await _dio.put('/user/updateprofile', data: data);
       if (response.statusCode == 200) {
-        print('Successfully updated patient profile');
+        // print('Successfully updated patient profile');
         return true;
       }
     } on DioException catch (err) {
-      debugPrint(err.message);
+      throw CustomException(err.message.toString());
     }
     return false;
   }
@@ -70,11 +74,11 @@ class DioClient {
     try {
       Response response = await _dio.post('/user/createprofile', data: data);
       if (response.statusCode == 201) {
-        print('Successfully created patient profile');
+        // print('Successfully created patient profile');
         return true;
       }
     } on DioException catch (err) {
-      debugPrint(err.message);
+      throw CustomException(err.message.toString());
     }
     return false;
   }
@@ -115,7 +119,7 @@ class DioClient {
       Response response =
           await _dio.post('/user/createinsurancepolicy', data: data);
       if (response.statusCode == 201) {
-        print('Successfully created patient profile');
+        // print('Successfully created patient profile');
       }
     } on DioException catch (err) {
       debugPrint(err.message);
@@ -127,7 +131,7 @@ class DioClient {
       Response response =
           await _dio.put('/user/updateinsurancepolicy', data: data);
       if (response.statusCode == 200) {
-        print('Successfully update patient profile');
+        // print('Successfully update patient profile');
       }
     } on DioException catch (err) {
       debugPrint(err.message);
@@ -139,7 +143,7 @@ class DioClient {
       Response response =
           await _dio.put('/user/deleteinsurancepolicy/$policyId');
       if (response.statusCode == 200) {
-        print('Successfully update patient profile');
+        // print('Successfully update patient profile');
       }
     } on DioException catch (err) {
       debugPrint(err.message);
@@ -151,6 +155,18 @@ class DioClient {
       Response response = await _dio.get('/user/getprescriptions');
       return (response.data as List)
           .map((x) => Prescription.fromJson(x))
+          .toList();
+    } on DioException catch (err) {
+      final errorMessage = (err).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<List<LabRequest>> getLabinvestigations() async {
+    try {
+      Response response = await _dio.get('/user/getlabinvestigations');
+      return (response.data as List)
+          .map((x) => LabRequest.fromJson(x))
           .toList();
     } on DioException catch (err) {
       final errorMessage = (err).toString();
