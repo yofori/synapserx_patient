@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:synapserx_patient/pages/displayprescription.dart';
 
+import '../models/prescription.dart';
 import '../providers/prescriptions_provider.dart';
 import 'alert_msg_widget.dart';
 
@@ -29,12 +31,14 @@ class _MyPrescriptionsWidgetState extends ConsumerState<MyPrescriptionsWidget> {
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DisplayRxPage(
-                                    prescription: prescriptions[index],
-                                  )));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => DisplayRxPage(
+                      //               prescription: prescriptions[index],
+                      //             )));
+                      context.go('/prescriptions/displayprescription',
+                          extra: prescriptions[index]);
                     },
                     leading: Container(
                       width: 40,

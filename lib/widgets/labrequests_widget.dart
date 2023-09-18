@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../pages/displaylabinvestigation.dart';
 import '../providers/labrequests_provider.dart';
 import 'alert_msg_widget.dart';
 
@@ -27,12 +28,12 @@ class _MyLabsWidgetState extends ConsumerState<MyLabsWidget> {
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => DisplayRxPage(
-                      //               prescription: labinvestigations[index],
-                      //             )));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DisplayLabInvestigationPage(
+                                    labRequest: labinvestigations[index],
+                                  )));
                     },
                     leading: Container(
                       width: 40,

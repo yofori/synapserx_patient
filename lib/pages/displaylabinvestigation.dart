@@ -1,37 +1,40 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
-import '../services/pdf_prescription_api.dart' as pdfgen;
-import '../models/prescription.dart';
+import 'package:synapserx_patient/models/labrequest.dart';
+import '../main.dart';
+import '../services/pdf_labrequest_api.dart' as pdfgen;
 import '../services/pdf_api.dart';
 
-class DisplayRxPage extends StatefulWidget {
-  const DisplayRxPage({super.key, required this.prescription});
-  static String get routeName => 'displayprescription';
-  static String get routeLocation => '$routeName';
+class DisplayLabInvestigationPage extends StatefulWidget {
+  const DisplayLabInvestigationPage({super.key, required this.labRequest});
+  static String get routeName => 'displaylabinvestigation';
+  static String get routeLocation => '/$routeName';
 
-  final Prescription prescription;
+  final LabRequest labRequest;
 
   @override
-  State<DisplayRxPage> createState() => _DisplayRxPageState();
+  State<DisplayLabInvestigationPage> createState() =>
+      _DisplayLabInvestigationPageState();
 }
 
-class _DisplayRxPageState extends State<DisplayRxPage> {
+class _DisplayLabInvestigationPageState
+    extends State<DisplayLabInvestigationPage> {
   double width = 0;
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Prescription'),
+          title: const Text('Lab Request'),
           centerTitle: true,
           actions: [
             IconButton(
                 onPressed: () async {
-                  final pdfFile = await pdfgen.PdfPrescriptionApi.generate(
-                      widget.prescription);
+                  final pdfFile =
+                      await pdfgen.PdfLabRequestApi.generate(widget.labRequest);
                   // ignore: use_build_context_synchronously
-                  PdfApi.sharePDF(context, pdfFile, 'Your Prescription');
+                  PdfApi.sharePDF(context, pdfFile, 'Your Lab Request');
                   //PdfApi.openFile(pdfFile);
                 },
                 icon: const Icon(Icons.share))
@@ -48,7 +51,7 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
                 ),
                 Center(
                   child: BarcodeWidget(
-                    data: widget.prescription.sId.toString(),
+                    data: widget.labRequest.sId.toString(),
                     barcode: Barcode.qrCode(),
                     width: 150,
                   ),
@@ -58,7 +61,7 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
                 ),
                 const Center(
                   child: Text(
-                    'PRESCRIPTION',
+                    'ANALYSIS REQUEST',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -79,7 +82,7 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
                               )),
                           SizedBox(
                               child: Text(
-                                  '${widget.prescription.pxFirstname} ${widget.prescription.pxSurname}')),
+                                  '${widget.labRequest.pxFirstname} ${widget.labRequest.pxSurname}')),
                         ],
                       ),
                       const SizedBox(
@@ -94,22 +97,14 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
                             )),
                         SizedBox(
                             child: Text(
-                                '${widget.prescription.pxAge}yrs / ${widget.prescription.pxgender}')),
+                                '${widget.labRequest.pxAge}yrs / ${widget.labRequest.pxgender}')),
                       ]),
                       const SizedBox(
                         height: 20,
                       ),
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Rx',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Center(child: buildPrescription(widget.prescription)),
+                      Center(child: buildLabRequest(widget.labRequest)),
                       Center(
-                        child: buildFooter(widget.prescription),
+                        child: buildFooter(widget.labRequest),
                       )
                     ],
                   ),
@@ -120,7 +115,8 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
         ));
   }
 
-  Widget buildPrescription(Prescription prescription) {
+  Widget buildLabRequest(LabRequest labrequest) {
+    double width = MediaQuery.of(context).size.width;
     int i = 1;
     List<DataColumn> createColumns() {
       return [
@@ -128,77 +124,31 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
             label: Container(
                 padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
                 alignment: Alignment.bottomLeft,
-                //width: width * .05,
-                height: 20,
+                width: width * .05,
+                height: 15,
                 child: const Text('#'))),
         DataColumn(
             label: Container(
                 padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
                 alignment: Alignment.bottomLeft,
-                //width: width * .38,
-                height: 20,
-                child: const Text('Name of Medication'))),
-        DataColumn(
-            label: Container(
-                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
-                alignment: Alignment.bottomLeft,
-                //width: width * .15,
-                height: 20,
-                child: const Text('Dose'))),
-        DataColumn(
-            label: Container(
-                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
-                alignment: Alignment.bottomCenter,
-                //width: width * .15,
-                height: 20,
-                child: const Text('Dosage'))),
-        DataColumn(
-            label: Container(
-                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
-                alignment: Alignment.bottomLeft,
-                //width: width * .19,
-                height: 20,
-                child: const Text('Duration'))),
+                width: width * .70,
+                height: 15,
+                child: const Text('Analysis Request'))),
       ];
     }
 
     List<DataRow> createrows() {
-      return prescription.medications!
+      return labrequest.requests!
           .map((item) => DataRow(cells: [
                 DataCell(Container(
                     margin: const EdgeInsets.all(3),
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      '${(i++)}',
-                      softWrap: true,
-                    ))),
+                    child: Text('${(i++)}'))),
                 DataCell(Container(
                   margin: const EdgeInsets.all(3),
                   alignment: Alignment.topLeft,
-                  child: Text(
-                    '${item.drugName} ${item.directionOfUse == null || item.directionOfUse.toString().trim() == '' ? '' : '\n \n Sig: ${item.directionOfUse.toString()}'}',
-                    softWrap: true,
-                  ),
+                  child: Text(item.orderedTestDescription),
                 )),
-                DataCell(Container(
-                    margin: const EdgeInsets.all(3),
-                    alignment: Alignment.topLeft,
-                    child: Text('${item.dose} ${item.dosageUnits}',
-                        softWrap: true))),
-                DataCell(Container(
-                    margin: const EdgeInsets.all(3),
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      '${item.dosageRegimen}',
-                      softWrap: true,
-                    ))),
-                DataCell(Container(
-                    margin: const EdgeInsets.all(3),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      '${item.duration} ${item.durationUnits}',
-                      softWrap: true,
-                    ))),
               ]))
           .toList();
     }
@@ -208,10 +158,10 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
       child: DataTable(
           //headingTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
           showBottomBorder: true,
-          headingRowHeight: 30,
+          headingRowHeight: 20,
           headingRowColor:
               MaterialStateColor.resolveWith((states) => Colors.grey),
-          dataRowHeight: 75,
+          dataRowHeight: 20,
           border: TableBorder.all(width: 0.5),
           columnSpacing: 0,
           horizontalMargin: 0,
@@ -220,7 +170,7 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
     );
   }
 
-  static Widget buildFooter(Prescription prescription) => Column(
+  static Widget buildFooter(LabRequest labRequest) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // const Divider(
@@ -231,11 +181,11 @@ class _DisplayRxPageState extends State<DisplayRxPage> {
           ),
           buildSimpleText(
               title: 'Prescriber: ',
-              value: prescription.prescriberName.toString()),
+              value: labRequest.prescriberName.toString()),
           const SizedBox(height: 5),
           buildSimpleText(
               title: 'Reg No: ',
-              value: prescription.prescriberMDCRegNo.toString()),
+              value: labRequest.prescriberMDCRegNo.toString()),
         ],
       );
 

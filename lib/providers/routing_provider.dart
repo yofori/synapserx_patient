@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:synapserx_patient/pages/createprofile.dart';
 import 'package:synapserx_patient/pages/myqrcodepage.dart';
 import 'package:synapserx_patient/pages/registeruser.dart';
+import '../models/prescription.dart';
+import '../pages/displayprescription.dart';
 import '../pages/forgotpassword.dart';
 import '../pages/insurancepage.dart';
 import '../pages/landing.dart';
@@ -108,11 +110,21 @@ final routerProvider = Provider<GoRouter>((ref) {
                 //navigatorKey: _shellNavigatorPrescriptionsKey,
                 routes: <RouteBase>[
                   GoRoute(
-                    path: '/prescriptions',
-                    pageBuilder: (context, state) => const NoTransitionPage(
-                      child: MyPrescriptionsPage(),
-                    ),
-                  )
+                      path: '/prescriptions',
+                      pageBuilder: (context, state) => const NoTransitionPage(
+                            child: MyPrescriptionsPage(),
+                          ),
+                      routes: <RouteBase>[
+                        GoRoute(
+                            path: 'displayprescription',
+                            builder: (context, state) {
+                              Prescription prescription =
+                                  state.extra as Prescription;
+                              return DisplayRxPage(prescription: prescription);
+                            })
+
+                        //=> NoTransitionPage(child: DisplayRxPage(prescription: state.pathParameters[''],),))
+                      ])
                 ]),
             StatefulShellBranch(
                 //navigatorKey: _shellNavigatorPrescriptionsKey,
